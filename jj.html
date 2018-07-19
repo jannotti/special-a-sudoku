@@ -20,8 +20,10 @@
     print('')
     </pre>
 
+    <div class="timer">1:23</div>
+
     <div class="board">
-  <div class="sq b0 r0 c0">2</div>
+  <div tabindex="0" class="sq b0 r0 c0">2</div>
   <div class="sq b0 r0 c1">1</div>
   <div class="sq b0 r0 c2">3</div>
   <div class="sq b1 r0 c3">4</div>
@@ -117,6 +119,26 @@
         $(ev.target).css("background-color", "red");
         $(ev.target).html("1");
       });
+
+      var seconds = 0;
+      setInterval(() => {
+        var min = Math.round(seconds / 60);
+        var sec = seconds % 60;
+        $(".timer").html(""+min+":"+sec);
+        seconds++;
+      }, 1000);
+
+      var current_sq = undefined;
+      $(".board .sq").mouseenter((ev) => {
+        current_sq = ev.target;
+        console.log(current_sq);
+      });
+
+      $(".board .sq").keydown((ev) => {
+        $(current_sq).html("X");
+        console.log(current_sq);
+      });
+
     </script>
   </body>
 </html>

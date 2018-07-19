@@ -55,3 +55,8 @@ div.board div.sq.b6:hover,
 div.board div.sq.b8:hover {
   background-color: #fb8;
 }
+
+.timer {
+  text-align: center;
+  font-size: 60px;
+}
