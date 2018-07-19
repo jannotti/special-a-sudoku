@@ -1,54 +1,122 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Page xxx Title</title>
-    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <title>Sudoku</title>
+    <link rel="stylesheet" type="text/css" href="jj.css">
   </head>
   <body>
-    <h1>My Second Heading</h1>
-    <p>My <b>second <i>paragraph</i></b> has a
-      <a href="https://www.jannotti.com/">link to my website</a>.</p>
+    <h1>Sudoku</h1>
 
-    <p>Another paragraph containing an image.
-      <img src="https://b.thumbs.redditmedia.com/Lown0p5aKI-YH_Nax47qBkE_a1dG3agrZ9_dPvL4IPc.jpg">
-    </p>
-    <input type="text" length="3">
-    
+    <p>This is a Sudoku board made up of 81 divs. Each div has threee
+      classes, to indicate the box, row and column.</p>
 
+    <p>The divs were generated with this python code, which is in
+      create-board.py</p>
+    <pre>
+  for row in range(9):
+    for col in range(9):
+      box = 3*(row // 3) + col // 3
+      print('&lt;div class="sq b{} r{} c{}"&gt;&lt;/div&gt;'.format(box, row, col))
+    print('')
+    </pre>
 
-    <table>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th> 
-        <th>Age</th>
-      </tr>
-      <tr>
-        <td class="teacher">Jill</td>
-        <td>Smith-Wesson</td> 
-        <td>    <input type="text" length="3"></td>
-      </tr>
-      <tr>
-        <td class="teacher">Eve</td>
-        <td>Jackson</td> 
-        <td>94</td>
-      </tr>
-      <tr>
-        <td class="student">John</td>
-        <td>Jannotti</td> 
-        <td>94</td>
-      </tr>
-    </table>
+    <div class="board">
+  <div class="sq b0 r0 c0">2</div>
+  <div class="sq b0 r0 c1">1</div>
+  <div class="sq b0 r0 c2">3</div>
+  <div class="sq b1 r0 c3">4</div>
+  <div class="sq b1 r0 c4">5</div>
+  <div class="sq b1 r0 c5">6</div>
+  <div class="sq b2 r0 c6">7</div>
+  <div class="sq b2 r0 c7">8</div>
+  <div class="sq b2 r0 c8">9</div>
 
+  <div class="sq b0 r1 c0"></div>
+  <div class="sq b0 r1 c1"></div>
+  <div class="sq b0 r1 c2"></div>
+  <div class="sq b1 r1 c3">3</div>
+  <div class="sq b1 r1 c4"></div>
+  <div class="sq b1 r1 c5"></div>
+  <div class="sq b2 r1 c6"></div>
+  <div class="sq b2 r1 c7"></div>
+  <div class="sq b2 r1 c8"></div>
 
-    <div>
-      first one
-    </div>
-    <div class="special">
-      some junk goes here
-    </div>
-    <div class="special">
-      some more junk goes here
-    </div>
-    
+  <div class="sq b0 r2 c0"></div>
+  <div class="sq b0 r2 c1"></div>
+  <div class="sq b0 r2 c2"></div>
+  <div class="sq b1 r2 c3"></div>
+  <div class="sq b1 r2 c4"></div>
+  <div class="sq b1 r2 c5"></div>
+  <div class="sq b2 r2 c6"></div>
+  <div class="sq b2 r2 c7"></div>
+  <div class="sq b2 r2 c8"></div>
+
+  <div class="sq b3 r3 c0"></div>
+  <div class="sq b3 r3 c1"></div>
+  <div class="sq b3 r3 c2"></div>
+  <div class="sq b4 r3 c3"></div>
+  <div class="sq b4 r3 c4"></div>
+  <div class="sq b4 r3 c5"></div>
+  <div class="sq b5 r3 c6"></div>
+  <div class="sq b5 r3 c7"></div>
+  <div class="sq b5 r3 c8"></div>
+
+  <div class="sq b3 r4 c0"></div>
+  <div class="sq b3 r4 c1"></div>
+  <div class="sq b3 r4 c2"></div>
+  <div class="sq b4 r4 c3"></div>
+  <div class="sq b4 r4 c4"></div>
+  <div class="sq b4 r4 c5"></div>
+  <div class="sq b5 r4 c6"></div>
+  <div class="sq b5 r4 c7"></div>
+  <div class="sq b5 r4 c8"></div>
+
+  <div class="sq b3 r5 c0"></div>
+  <div class="sq b3 r5 c1"></div>
+  <div class="sq b3 r5 c2"></div>
+  <div class="sq b4 r5 c3"></div>
+  <div class="sq b4 r5 c4"></div>
+  <div class="sq b4 r5 c5"></div>
+  <div class="sq b5 r5 c6"></div>
+  <div class="sq b5 r5 c7"></div>
+  <div class="sq b5 r5 c8"></div>
+
+  <div class="sq b6 r6 c0"></div>
+  <div class="sq b6 r6 c1"></div>
+  <div class="sq b6 r6 c2"></div>
+  <div class="sq b7 r6 c3"></div>
+  <div class="sq b7 r6 c4"></div>
+  <div class="sq b7 r6 c5"></div>
+  <div class="sq b8 r6 c6"></div>
+  <div class="sq b8 r6 c7"></div>
+  <div class="sq b8 r6 c8"></div>
+
+  <div class="sq b6 r7 c0"></div>
+  <div class="sq b6 r7 c1"></div>
+  <div class="sq b6 r7 c2"></div>
+  <div class="sq b7 r7 c3"></div>
+  <div class="sq b7 r7 c4"></div>
+  <div class="sq b7 r7 c5"></div>
+  <div class="sq b8 r7 c6"></div>
+  <div class="sq b8 r7 c7"></div>
+  <div class="sq b8 r7 c8"></div>
+
+  <div class="sq b6 r8 c0"></div>
+  <div class="sq b6 r8 c1"></div>
+  <div class="sq b6 r8 c2"></div>
+  <div class="sq b7 r8 c3"></div>
+  <div class="sq b7 r8 c4"></div>
+  <div class="sq b7 r8 c5"></div>
+  <div class="sq b8 r8 c6"></div>
+  <div class="sq b8 r8 c7"></div>
+  <div class="sq b8 r8 c8"></div>
+</div>
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+      $(".board").click((ev) => {
+        $(ev.target).css("background-color", "red");
+        $(ev.target).html("1");
+      });
+    </script>
   </body>
 </html>
