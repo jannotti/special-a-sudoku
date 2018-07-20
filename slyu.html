@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku</title>
+    <link rel="stylesheet" type="text/css" href="jj.css">
+  </head>
+  <body>
+    <h1>Sudoku</h1>
+
+    <p>This is a Sudoku board made up of 81 divs. Each div has threee
+      classes, to indicate the box, row and column.</p>
+
+    <p>The divs were generated with this python code, which is in
+      create-board.py</p>
+    <pre>
+  for row in range(9):
+    for col in range(9):
+      box = 3*(row // 3) + col // 3
+      print('&lt;div class="sq b{} r{} c{}"&gt;&lt;/div&gt;'.format(box, row, col))
+    print('')
+    </pre>
+
+    <div class="timer">1:23</div>
+
+    <div class="board">
+  <div tabindex="0" class="sq b0 r0 c0">2</div>
+  <div class="sq b0 r0 c1">1</div>
+  <div class="sq b0 r0 c2">3</div>
+  <div class="sq b1 r0 c3">4</div>
+  <div class="sq b1 r0 c4">5</div>
+  <div class="sq b1 r0 c5">6</div>
+  <div class="sq b2 r0 c6">7</div>
+  <div class="sq b2 r0 c7">8</div>
+  <div class="sq b2 r0 c8">9</div>
+
+  <div class="sq b0 r1 c0"></div>
+  <div class="sq b0 r1 c1"></div>
+  <div class="sq b0 r1 c2"></div>
+  <div class="sq b1 r1 c3">3</div>
+  <div class="sq b1 r1 c4"></div>
+  <div class="sq b1 r1 c5"></div>
+  <div class="sq b2 r1 c6"></div>
+  <div class="sq b2 r1 c7"></div>
+  <div class="sq b2 r1 c8"></div>
+
+  <div class="sq b0 r2 c0"></div>
+  <div class="sq b0 r2 c1"></div>
+  <div class="sq b0 r2 c2"></div>
+  <div class="sq b1 r2 c3"></div>
+  <div class="sq b1 r2 c4"></div>
+  <div class="sq b1 r2 c5"></div>
+  <div class="sq b2 r2 c6"></div>
+  <div class="sq b2 r2 c7"></div>
+  <div class="sq b2 r2 c8"></div>
+
+  <div class="sq b3 r3 c0"></div>
+  <div class="sq b3 r3 c1"></div>
+  <div class="sq b3 r3 c2"></div>
+  <div class="sq b4 r3 c3"></div>
+  <div class="sq b4 r3 c4"></div>
+  <div class="sq b4 r3 c5"></div>
+  <div class="sq b5 r3 c6"></div>
+  <div class="sq b5 r3 c7"></div>
+  <div class="sq b5 r3 c8"></div>
+
+  <div class="sq b3 r4 c0"></div>
+  <div class="sq b3 r4 c1"></div>
+  <div class="sq b3 r4 c2"></div>
+  <div class="sq b4 r4 c3"></div>
+  <div class="sq b4 r4 c4"></div>
+  <div class="sq b4 r4 c5"></div>
+  <div class="sq b5 r4 c6"></div>
+  <div class="sq b5 r4 c7"></div>
+  <div class="sq b5 r4 c8"></div>
+
+  <div class="sq b3 r5 c0"></div>
+  <div class="sq b3 r5 c1"></div>
+  <div class="sq b3 r5 c2"></div>
+  <div class="sq b4 r5 c3"></div>
+  <div class="sq b4 r5 c4"></div>
+  <div class="sq b4 r5 c5"></div>
+  <div class="sq b5 r5 c6"></div>
+  <div class="sq b5 r5 c7"></div>
+  <div class="sq b5 r5 c8"></div>
+
+  <div class="sq b6 r6 c0"></div>
+  <div class="sq b6 r6 c1"></div>
+  <div class="sq b6 r6 c2"></div>
+  <div class="sq b7 r6 c3"></div>
+  <div class="sq b7 r6 c4"></div>
+  <div class="sq b7 r6 c5"></div>
+  <div class="sq b8 r6 c6"></div>
+  <div class="sq b8 r6 c7"></div>
+  <div class="sq b8 r6 c8"></div>
+
+  <div class="sq b6 r7 c0"></div>
+  <div class="sq b6 r7 c1"></div>
+  <div class="sq b6 r7 c2"></div>
+  <div class="sq b7 r7 c3"></div>
+  <div class="sq b7 r7 c4"></div>
+  <div class="sq b7 r7 c5"></div>
+  <div class="sq b8 r7 c6"></div>
+  <div class="sq b8 r7 c7"></div>
+  <div class="sq b8 r7 c8"></div>
+
+  <div class="sq b6 r8 c0"></div>
+  <div class="sq b6 r8 c1"></div>
+  <div class="sq b6 r8 c2"></div>
+  <div class="sq b7 r8 c3"></div>
+  <div class="sq b7 r8 c4"></div>
+  <div class="sq b7 r8 c5"></div>
+  <div class="sq b8 r8 c6"></div>
+  <div class="sq b8 r8 c7"></div>
+  <div class="sq b8 r8 c8"></div>
+</div>
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+      $(".board").click((ev) => {
+        $(ev.target).css("background-color", "red");
+        $(ev.target).html("1");
+      });
+      $(".board").click((ev) => {
+        $(ev.target).css("background-color", "red");
+        $(ev.target).html("2");
+      });
+      $(".board").click((ev) => {
+        $(ev.target).css("background-color", "red");
+        $(ev.target).html("3");
+      });
+
+      var seconds = 0;
+      setInterval(() => {
+        var min = Math.round(seconds / 60);
+        var sec = seconds % 60;
+        $(".timer").html(""+min+":"+sec);
+        seconds++;
+      }, 1000);
+
+      var current_sq = undefined;
+      $(".board .sq").mouseenter((ev) => {
+        current_sq = ev.target;
+        console.log(current_sq);
+      });
+
+      $(".board .sq").keydown((ev) => {
+        $(current_sq).html("X");
+        console.log(current_sq);
+      });
+
+    </script>
+  </body>
+</html>
