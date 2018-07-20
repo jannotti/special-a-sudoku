@@ -22,6 +22,10 @@ div.board div.sq {
   /* float: left; */
 }
 
+div.board div.known {
+  font-weight: bold;
+}
+
 div.board div.sq.c0 {
   /* clear: both; */
 }
