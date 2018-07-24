@@ -113,6 +113,7 @@
       <div class="sq entry b8 r8 c7"></div>
       <div class="sq known b8 r8 c8">4</div>
     </div>
+    <button id="blue">Blue!</button>
     <script src="jquery-3.3.1.js"></script>
     <script>
       var seconds = 0;
@@ -137,6 +138,9 @@
           if ($(current_sq).hasClass("entry"))
             $(current_sq).html(ev.key);
         }
+      });
+      $("#blue").click(() => {
+        $(".board").css("color", "blue");
       });
     </script>
   </body>
