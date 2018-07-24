@@ -15,10 +15,13 @@ board = """
 #70|##0|#30
 3#0|##0|##7
 ---+---+---
-##0|##0|##0
+###|#3#|###
 #30|#70|#80
 1#0|2#9|##4
 """
+
+if len(sys.argv) > 1:
+  board = "\n".join(sys.argv[1:]);
 
 lines = []
 for line in board.split("\n"):
@@ -27,16 +30,19 @@ for line in board.split("\n"):
     for char in line:
       if char.isdigit():
         digits.append(char)
-      elif char in "#_ ":
+      elif char in "#_":
         digits.append("")
     if len(digits) != 9:
       warn("Bad line:", line)
     lines.append(digits)
 
-if len(lines) != 9:
-  warn(len(lines), "lines")
+if len(lines) > 9:
+  warn(len(lines), ": too many lines")
 
+if len(lines) < 9:
+  lines += [[""]*9]*(9-len(lines))
 
+print(lines)
 
 for row in range(9):
   for col in range(9):
