@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku</title>
+    <link rel="stylesheet" type="text/css" href="{% static "play/styles.css" %}">
+  </head>
+  <body>
+    <h1>Sudoku</h1>
+
+    <p>Here is the board passed in:</b>
+      <pre>
+        {{board}}
+      </pre>
+
+    <div class="timer">1:23</div>
+
+    <form class="checker" action="../check">
+      <div>
+        <label for="sol">User solution:</label> <input id="sol" type="text"
+                                                       name="solution">
+      </div>
+      <div>
+        <label>
+        Board ID: <input type="text" name="board_id"
+                         value="{{board_id}}">
+        </label>
+      </div>
+      <input type="submit" value="Check Solution">
+    </form>
+
+    <div class="board" tabindex="0">
+      {% for row in board %}
+        {% for ch in row %}
+          <div class="sq
+                      {% if ch %}known{% endif %}
+                      {% if not ch %}entry{% endif %}
+                      c{{forloop.counter0}}
+                      r{{forloop.parentloop.counter0}}">
+            {{ch}}{% if not ch %}_{% endif %}</div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    <script src="{% static "play/jquery-3.3.1.js" %}"></script>
+    <script>
+      var seconds = 0;
+      setInterval(() => {
+        var min = Math.round(seconds / 60);
+        var sec = seconds % 60;
+        if (sec < 10) {
+          sec = "0" + sec;
+        }
+        $(".timer").html(min+":"+sec);
+        seconds++;
+      }, 1000);
+
+      var current_sq = undefined;
+      $(".board .sq").mouseenter((ev) => {
+        current_sq = ev.target;
+      });
+      $(".board").focus();
+      $(".board").keydown((ev) => {
+        console.log(ev);
+        if (ev.key == " " || (ev.key >= "0" && ev.key <= "9")) {
+          if ($(current_sq).hasClass("entry"))
+            $(current_sq).html(ev.key);
+        }
+      });
+
+      function contents() {
+        return $(".board").text().replace(/[ \n]/g,"");
+      }
+      function update_solution() {
+        $(".checker input[name='solution']").val(contents());
+      }
+
+      $("form").submit(() => {
+        update_solution();
+        return true;
+      })
+    </script>
+  </body>
+</html>
