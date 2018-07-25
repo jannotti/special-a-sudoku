@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku Boards</title>
+    <link rel="stylesheet" type="text/css" href="{% static "play/styles.css" %}">
+  </head>
+  <body>
+    <h1>Sudoku Boards</h1>
+
+    <ol>
+      {% for board in boards %}
+        <li><a href="show/{{forloop.counter0}}">Board {{forloop.counter}}</a></li>
+      {% endfor %}
+    </ol>
+  </body>
+</html>

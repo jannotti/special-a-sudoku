@@ -1,0 +1,82 @@
+* {
+  box-sizing: border-box;
+}
+
+div.board {
+  width: 362px;
+  height: 362px;
+  border: 1px solid black;
+  font-size: 0;
+}
+
+div.board div.sq {
+  width: 40px;
+  height: 40px;
+  background-color: #ea7;
+  display: inline-block;
+  border: 1px solid black;
+  font: 16px Helvetica;
+  text-align: center;
+  line-height: 40px;
+  vertical-align: top;
+  /* float: left; */
+}
+
+div.board div.known {
+  font-weight: bold;
+}
+div.board div.entry {
+
+}
+
+div.board div.sq.c0 {
+  /* clear: both; */
+}
+
+div.board div.sq.c3, div.board div.sq.c6 {
+  border-left: 3px solid black;
+}
+
+div.board div.sq.r3, div.board div.sq.r6 {
+  border-top: 3px solid black;
+}
+
+div.board div.sq.b1,
+div.board div.sq.b3,
+div.board div.sq.b5,
+div.board div.sq.b7 {
+  background-color: #c85;
+}
+
+div.board div.sq.b1:hover,
+div.board div.sq.b3:hover,
+div.board div.sq.b5:hover,
+div.board div.sq.b7:hover {
+  background-color: #d96;
+}
+
+div.board div.sq.b0:hover,
+div.board div.sq.b2:hover,
+div.board div.sq.b4:hover,
+div.board div.sq.b6:hover,
+div.board div.sq.b8:hover {
+  background-color: #fb8;
+}
+
+.timer {
+  text-align: center;
+  font-size: 60px;
+  font-family: Helvetica;
+}
+
+/* form.checker { */
+/*   float: right; */
+/*   font-size: 20px; */
+/*   margin: 20px; */
+/* } */
+
+/* form.checker input { */
+/*   width: 450px; */
+/*   float: right; */
+/*   margin-left: 40px; */
+/* } */
