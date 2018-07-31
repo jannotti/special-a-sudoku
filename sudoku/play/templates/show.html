@@ -71,6 +71,10 @@
           if ($(current_sq).hasClass("entry"))
             $(current_sq).html(ev.key == " " ? "_" : ev.key);
         }
+        if (ev.keyCode == 8) {
+          if ($(current_sq).hasClass("entry"))
+            $(current_sq).html("_");
+        }
         
         if (ev.keyCode in {37:1, 38:1, 39:1, 40:1}) {
           if (current_sq) {
