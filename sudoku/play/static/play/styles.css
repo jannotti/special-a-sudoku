@@ -26,7 +26,7 @@ div.board div.known {
   font-weight: bold;
 }
 div.board div.entry {
-
+  text-decoration: underline;
 }
 
 div.board div.sq.c0 {
@@ -52,7 +52,7 @@ div.board div.sq.b1:hover,
 div.board div.sq.b3:hover,
 div.board div.sq.b5:hover,
 div.board div.sq.b7:hover {
-  background-color: #d96;
+  /* removed, confusing with active */
 }
 
 div.board div.sq.b0:hover,
@@ -60,8 +60,13 @@ div.board div.sq.b2:hover,
 div.board div.sq.b4:hover,
 div.board div.sq.b6:hover,
 div.board div.sq.b8:hover {
-  background-color: #fb8;
+  /* removed, confusing with active */
 }
+
+div.board div.sq.active {
+ background-color: #d06;
+}
+
 
 .timer {
   text-align: center;
