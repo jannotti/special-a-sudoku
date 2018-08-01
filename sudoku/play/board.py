@@ -121,6 +121,13 @@ def contains_repeat(l):
         return True
   return False
 
+def count(brd, digit):
+  cnt = 0
+  for row in brd:
+    cnt += row.count(digit)
+  return cnt
+
+
 def advise(original, submitted):
   advice = []
   if not matches(original, submitted):
@@ -150,7 +157,11 @@ def advise(original, submitted):
         box(submitted, box_of(x,y))
       if constrained(set(all)):
         advice.append("Check Cell "+str((x,y)))
-        
+
+  for digit in range(1,10):
+    if count(submitted, digit) == 8:
+      advice.append("Add the last "+ str(digit));
+
   return advice
 
 def to_html(board, submitted=empty()):
