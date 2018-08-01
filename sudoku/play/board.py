@@ -108,7 +108,7 @@ def box_of(row, col):
 def constrained(lst):
   digits = set(lst)
   # We return False when there's no None so that we can ask if a row
-  # is aconstrained when full and be told No. That is more convenient
+  # is constrained when full and be told No. That is more convenient
   # for reporting interesting, "constrained" locations.
   if None not in digits:
     return False

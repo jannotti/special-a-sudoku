@@ -6,7 +6,7 @@ from . import board
 
 def index(request):
   context = {
-    'boards' : boards.db,
+    'boards' : board.db,
   }
   template = loader.get_template('index.html')
   return HttpResponse(template.render(context, request))
