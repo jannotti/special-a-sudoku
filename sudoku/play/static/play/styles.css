@@ -67,7 +67,6 @@ div.board div.sq.active {
  background-color: #d06;
 }
 
-<<<<<<< HEAD
 #grid{
   width:120px;
   height:120px;
@@ -85,8 +84,6 @@ div.littleboard{
   float: left;
 }
 
-=======
->>>>>>> ff0a17919deb655f478efbba26e191bcbe7fa4dd
 
 .timer {
   text-align: center;
