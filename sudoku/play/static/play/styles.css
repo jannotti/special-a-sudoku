@@ -67,12 +67,12 @@ div.board div.sq.active {
  background-color: #d06;
 }
 
-#grid{
+#grid {
   width:120px;
   height:120px;
 }
 
-div.littleboard{
+div.littleboard {
   width: 40px;
   height: 40px;
   background-color: green;
