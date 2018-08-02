@@ -54,6 +54,8 @@
 
 <div>
 
+    <button id=row6>Row 6</button>
+    <button id=cell53>Cell 5,3</button>
 
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
@@ -73,6 +75,16 @@
         let m = classes.match("\\br(\\d+)\\b.*\\bc(\\d+)\\b")
         return [parseInt(m[1]), parseInt(m[2])]
       }
+
+      function highlight(cls) {  //whenever there is a class called, do this function
+          $(cls).css('background-color','red');
+          setTimeout(function () {
+            $(cls).css('background-color','')
+          }, 6000);     //change color for 6 seconds to show the hints
+      }
+
+      highlight(".r6");
+      highlight(".r5.c3");
 
       function tap() {
         $(tapped_sq).html($(this).text())

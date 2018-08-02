@@ -8,7 +8,7 @@
   <body>
     <h1>Sudoku Boards</h1>
 
-    <ol>
+    <ol> /*ordered list*/
       {% for board in boards %}
         <li><a href="show/{{forloop.counter0}}">Board {{forloop.counter}}</a></li>
       {% endfor %}
