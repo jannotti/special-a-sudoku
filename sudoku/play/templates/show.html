@@ -27,6 +27,12 @@
     </ol>
     {% endif %}
 
+    {% autoescape off %}
+    <script>
+      var hints = {{hints}};
+    </script>
+    {% endautoescape %}
+
     <div class="board" tabindex="0">
       {% for square in squares %}
       <div class="{{square.classes}}">
