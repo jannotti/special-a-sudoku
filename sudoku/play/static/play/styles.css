@@ -63,6 +63,24 @@ div.board div.sq.b8:hover {
   background-color: #fb8;
 }
 
+#grid{
+  width:120px;
+  height:120px;
+}
+
+div.littleboard{
+  width: 40px;
+  height: 40px;
+  background-color: green;
+  border: 1px solid black;
+  font: 16px Helvetica;
+  text-align: center;
+  line-height: 40px;
+  vertical-align: top;
+  float: left;
+}
+
+
 .timer {
   text-align: center;
   font-size: 60px;
