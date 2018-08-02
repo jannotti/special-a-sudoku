@@ -2,135 +2,162 @@
 <html>
 <head>
 <style>
-table, th, td {
+table {
     border: 1px solid black;
     border-collapse: collapse;
     text-align: center;
     font-family: "Times New Roman";
-    font-size: 40px
-
+    font-size: 20px;
 }
 
 h2 {
-    text-align: center;
+    text-align;
 }
-table,th,td {
-    height: 128px;
-    width: 40%;
-      }
+th,td {
+    border: 1px solid black;
+    height: 50px;
+    width: 50px;
+}
 .square {
 
 }
 
-</style>
-</head>
+
+
+
 </style>
 </head>
 <body>
 <h2 style="color:Tomato;">Sudoku Game</h2>
-<table style="width:40%">
+<table id="tb1" class="table table-bordered">
   <tr>
 
-    <th style="font-size:40px" class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">3</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</th>
+    <td></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">3</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</td>
   </type>
   </tr>
   <tr>
-    <td class="square"><input></td>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">7</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</th>
-    <td class="square"><input></td>
-    <td class="square"><input></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">7</td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
   </tr>
   <tr>
-    <td class="square"><input></td>
+    <td class="empty"></td>
     <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">2</td>
     <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</td>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
   </tr>
   <tr>
-    <td class="square"><input></td>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
     <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</td>
     <td></td>
   </tr>
   <tr>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">1</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
   </tr>
   <tr>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</th>
-    <th class="square"><input></th>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</td>
+    <td class="empty"></td>
   </tr>
   <tr>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">7</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">2</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
-    <th><input></th>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">7</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">2</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
+    <td></td>
   </tr>
   <tr>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">3</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">2</th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</th>
-    <th class="square"><input></th>
+    <td class="square"></td>
+    <td class="square"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">3</td>
+    <td class="square"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">2</td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">4</td>
+    <td class="square"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">9</td>
+    <td class="square"></td>
   </tr>
   <tr>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</th>
-    <th class="square"><input></th>
-    <th style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
-    <th class="square"><input></th>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">5</td>
+    <td class="square"></td>
+    <td class="square"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">6</td>
+    <td class="square"></td>
+    <td style="background-color: rgba(255, 0, 0, 0.3);" class="square">8</td>
+    <td class="square"></td>
+    <td class="square"></td>
+    <td class="square"></td>
   </tr>
 </table>
+<div class="bc">
+  row：<input type="text" id="txtRow" value="">
+  column:<input type="text" id="txtCol" value="">
+  data:<input type="text" id="txtData" value="">
+  <input type="button" id="btn" class="btn btn-primary" value="enter">
+</div>
 
-</body>
-</html>
+ <script src="jquery-3.3.1.js"></script>
+ <script>
+  function add_data(table_id,row_num, c_num, data){
+    var tb=$("#"+table_id);
+    if(tb.length>0){
+      var trs=tb.find('tr');
+      var tds=$(trs[row_num-1]).find('td');
+      var td=tds[c_num-1];
+      $(td).html(data);
+    }
+  }
+   $(document).ready(function(){
+     $("#btn").click(function(){
+     var r= parseInt($("#txtRow").val());
+     var c= parseInt($("#txtCol").val());
+     var d= parseInt($("#txtData").val());
+     add_data('tb1',r,c,d);
+   });
+ });
+ var table=""
+ for 
+ </script>

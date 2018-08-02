@@ -1,4 +1,5 @@
 import re
+from . import last
 
 db = ["""
 #3#|##1|#98
@@ -170,7 +171,9 @@ def advise(original, submitted):
     if count(submitted, digit) == 8:
       advice.append("Add the last "+ str(digit));
 
+  advice.append(str(last.which_number_is_the_last_one(submitted)))
   return (advice, hints)
+
 
 def to_html(board, submitted=empty()):
   squares = []
