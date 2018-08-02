@@ -8,37 +8,30 @@
   <body>
     <h1>Sudoku</h1>
 
-    <p>Here is the board passed in:</b>
-      <pre>
-        {{board}}
-      </pre>
-
     <div class="timer">1:23</div>
 
-    <form class="checker" action="../check">
+    <form class="checker" method="POST">
+      {% csrf_token %}
       <div>
-        <label for="sol">User solution:</label> <input id="sol" type="text"
-                                                       name="solution">
+        <label for="sol">User solution:</label>
+        <input id="sol" type="text" name="solution">
       </div>
-      <div>
-        <label>
-        Board ID: <input type="text" name="board_id"
-                         value="{{board_id}}">
-        </label>
-      </div>
-      <input type="submit" value="Check Solution">
+      <input type="submit" value="Check">
     </form>
 
+    {% if advice %}
+    <ol>
+      {% for a in advice %}
+        <li>{{a}}</li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+
     <div class="board" tabindex="0">
-      {% for row in board %}
-        {% for ch in row %}
-          <div class="sq
-                      {% if ch %}known{% endif %}
-                      {% if not ch %}entry{% endif %}
-                      c{{forloop.counter0}}
-                      r{{forloop.parentloop.counter0}}">
-            {{ch}}{% if not ch %}_{% endif %}</div>
-        {% endfor %}
+      {% for square in squares %}
+      <div class="{{square.classes}}">
+        {{square.content}}
+      </div>
       {% endfor %}
     </div>
 <div id="grid">
@@ -55,6 +48,7 @@
     <div class="littleboard">9</div>
 <div>
 
+
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
       var seconds = 0;
@@ -68,16 +62,50 @@
         seconds++;
       }, 1000);
 
+      function row_col(div) {
+        let classes = div.className;
+        let m = classes.match("\\br(\\d+)\\b.*\\bc(\\d+)\\b")
+        return [parseInt(m[1]), parseInt(m[2])]
+      }
+
+
       var current_sq = undefined;
       $(".board .sq").mouseenter((ev) => {
         current_sq = ev.target;
+        $(".board .sq").removeClass("active");
+        $(current_sq).addClass("active");
+      });
+      $(".board .sq").mouseleave((ev) => {
+        $(".board .sq").removeClass("active");
       });
       $(".board").focus();
       $(".board").keydown((ev) => {
-        console.log(ev);
-        if (ev.key == " " || (ev.key >= "0" && ev.key <= "9")) {
+        if (ev.key == " " || (ev.key >= "1" && ev.key <= "9")) {
           if ($(current_sq).hasClass("entry"))
-            $(current_sq).html(ev.key);
+            $(current_sq).html(ev.key == " " ? "_" : ev.key);
+        }
+        if (ev.keyCode == 8) {
+          if ($(current_sq).hasClass("entry"))
+            $(current_sq).html("_");
+        }
+        
+        if (ev.keyCode in {37:1, 38:1, 39:1, 40:1}) {
+          if (current_sq) {
+            let [row, col] = row_col(current_sq);
+            if (ev.keyCode == 38 && row > 0) // up
+              row -= 1;
+            if (ev.keyCode == 37 && col > 0) // left
+              col -= 1;
+            if (ev.keyCode == 39 && col < 8) // right
+              col += 1;
+            if (ev.keyCode == 40 && row < 8) // down
+              row += 1;
+            $(".board .sq").removeClass("active");
+            let cell = $(".r"+row+".c"+col).get(0);
+            $(cell).addClass("active");
+            current_sq = cell;
+            ev.preventDefault();
+          }
         }
       });
 
