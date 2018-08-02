@@ -83,8 +83,9 @@
           }, 6000);     //change color for 6 seconds to show the hints
       }
 
-      highlight(".r6");
-      highlight(".r5.c3");
+      for (let hint of hints) {
+        highlight(hint);
+      }
 
       function tap() {
         $(tapped_sq).html($(this).text())
