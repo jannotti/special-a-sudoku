@@ -8,6 +8,7 @@ div.board {
   border: 1px solid black;
   font-size: 0;
   position: relative;
+  outline: none;
 }
 
 div.board div.sq {
