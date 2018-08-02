@@ -71,8 +71,9 @@ div.board div.sq.active {
 
 #grid {
   position: absolute;
-  width:90px;
-  height:90px;
+  width:92px;
+  height:92px;
+  border: 1px solid black;
 }
 
 #grid div {
