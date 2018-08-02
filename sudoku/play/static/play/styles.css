@@ -7,6 +7,7 @@ div.board {
   height: 362px;
   border: 1px solid black;
   font-size: 0;
+  position: relative;
 }
 
 div.board div.sq {
@@ -68,18 +69,19 @@ div.board div.sq.active {
 }
 
 #grid {
-  width:120px;
-  height:120px;
+  position: absolute;
+  width:90px;
+  height:90px;
 }
 
-div.littleboard {
-  width: 40px;
-  height: 40px;
+#grid div {
+  width: 30px;
+  height: 30px;
   background-color: green;
   border: 1px solid black;
   font: 16px Helvetica;
   text-align: center;
-  line-height: 40px;
+  line-height: 30px;
   vertical-align: top;
   float: left;
 }

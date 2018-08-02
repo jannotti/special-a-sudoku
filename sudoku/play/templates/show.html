@@ -37,18 +37,12 @@
         {{square.content}}
       </div>
       {% endfor %}
-    </div>
 
-    <div id="grid">
-      <div class="littleboard">1</div>
-      <div class="littleboard">2</div>
-      <div class="littleboard">3</div>
-      <div class="littleboard">4</div>
-      <div class="littleboard">5</div>
-      <div class="littleboard">6</div>
-      <div class="littleboard">7</div>
-      <div class="littleboard">8</div>
-      <div class="littleboard">9</div>
+      <div id="grid">
+        <div>1</div> <div>2</div> <div>3</div>
+        <div>4</div> <div>5</div> <div>6</div>
+        <div>7</div> <div>8</div> <div>9</div>
+      </div>
     </div>
 
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
@@ -82,10 +76,10 @@
       }
 
       function tap() {
-        $(tapped_sq).html($(this).text())
+        $(tapped_sq).html($(this).text());
       }
 
-      $(".littleboard").click(tap)
+      $("#grid div").click(tap)
 
       var current_sq = undefined;
       var tapped_sq = undefined;
@@ -99,6 +93,9 @@
       });
       $(".board .sq.entry").click((ev) => {
         tapped_sq = ev.target;
+        let pos = $(tapped_sq).position();
+        $("#grid").css({"top": (pos.top+30)+"px",
+                        "left": (pos.left+30)+"px"});
       });
       $(".board").focus();
       $(".board").keydown((ev) => {
