@@ -1,5 +1,7 @@
 import re
+
 from . import last
+from . import hint
 
 db = ["""
 #3#|##1|#98
@@ -172,6 +174,11 @@ def advise(original, submitted):
       advice.append("Add the last "+ str(digit));
 
   advice.append(str(last.which_number_is_the_last_one(submitted)))
+  
+  for n in range(1, 10):
+    a = hint.hidden_singles_row(hint.possibilities_dict(submitted), n)
+    if len(a) > 0:
+        advice.append(str([a, n]))
   return (advice, hints)
 
 
