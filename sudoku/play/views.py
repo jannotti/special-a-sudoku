@@ -28,3 +28,4 @@ def show(request, board_id):
   }
   template = loader.get_template('show.html')
   return HttpResponse(template.render(context, request))
+
