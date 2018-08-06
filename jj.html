@@ -20,8 +20,15 @@
     print('')
     </pre>
 
-    <div class="timer">1:23</div>
-
+     <div class="timer">1:23</div>
+     <div id="timer"></div>
+   <input id="btnShow" type="button" value="show" />
+   <input id="btnHide" type="button" value="hide" /><br />
+   <script type="text/javascript" >
+       $("#btnShow").bind("click", function(event) { $("#divMsg").show(); });
+       $("#btnHide").bind("click", function(event) { $("#divMsg").hide(); });
+ });
+   </script>
     <div class="board" tabindex="0">
       <div class="sq known b0 r0 c0">9</div>
       <div class="sq entry b0 r0 c1"></div>
@@ -113,7 +120,15 @@
       <div class="sq entry b8 r8 c7"></div>
       <div class="sq known b8 r8 c8">4</div>
     </div>
+<<<<<<< HEAD
+    <button id="">Blue!</button>
+
+
+
+
+=======
     <button id="blue">Blue!</button>
+>>>>>>> 8ee7721bf9215da7f39ebdbe27b527978626e4ff
     <script src="jquery-3.3.1.js"></script>
     <script>
       var seconds = 0;
@@ -127,9 +142,12 @@
         seconds++;
       }, 1000);
 
-      var current_sq = undefined;
-      $(".board .sq").mouseenter((ev) => {
-        current_sq = ev.target;
+
+
+
+      var numbers = 1-9;
+      $(".board").keydown(function(){
+        $()
       });
       $(".board").focus();
       $(".board").keydown((ev) => {
@@ -139,9 +157,15 @@
             $(current_sq).html(ev.key);
         }
       });
+<<<<<<< HEAD
+      $("#blue").click(()=>{$(".board").css("color","blue");});
+
+
+=======
       $("#blue").click(() => {
         $(".board").css("color", "blue");
       });
+>>>>>>> 8ee7721bf9215da7f39ebdbe27b527978626e4ff
     </script>
   </body>
 </html>
