@@ -16,14 +16,16 @@ def show(request, board_id):
   submitted = board.empty()
   advice = []
   hints = []
+  checks = []
   if request.POST:
     submitted = board.from_line(request.POST["solution"])
-    (advice, hints) = board.advise(brd, submitted)
+    (advice, hints, checks) = board.advise(brd, submitted)
   context = {
     'board' : brd,
     'submitted' : submitted,
     'advice' : advice,
     'hints' : hints,
+    'checks' : checks,
     'squares': board.to_html(brd, submitted)
   }
   template = loader.get_template('show.html')

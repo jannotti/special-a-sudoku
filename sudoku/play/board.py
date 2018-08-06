@@ -130,20 +130,21 @@ def count(brd, digit):
 
 def advise(original, submitted):
   advice = []
-  hints = [];
+  hints = []
+  checks = []
   if not matches(original, submitted):
     advice.append("CHEATER!");
 
   for i in range(9):
     if contains_repeat(row(submitted, i)):
       advice.append("Bad Row "+str(i))
-      hints.append(".r"+str(i))
+      checks.append(".r"+str(i))
     if contains_repeat(col(submitted, i)):
       advice.append("Bad Column "+str(i))
-      hints.append(".c"+str(i))
+      checks.append(".c"+str(i))
     if contains_repeat(box(submitted, i)):
       advice.append("Bad Box "+str(i))
-      hints.append(".b"+str(i))
+      checks.append(".b"+str(i))
 
   for i in range(9):
     if constrained(row(submitted, i)):
@@ -170,7 +171,7 @@ def advise(original, submitted):
     if count(submitted, digit) == 8:
       advice.append("Add the last "+ str(digit));
 
-  return (advice, hints)
+  return (advice, hints, checks)
 
 def to_html(board, submitted=empty()):
   squares = []

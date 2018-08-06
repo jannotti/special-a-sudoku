@@ -30,6 +30,7 @@
     {% autoescape off %}
     <script>
       var hints = {{hints}};
+      var checks = {{checks}};
     </script>
     {% endautoescape %}
 
@@ -50,12 +51,7 @@
     <div class="littleboard">7</div>
     <div class="littleboard">8</div>
     <div class="littleboard">9</div>
-
-
 <div>
-
-    <button id=row6>Row 6</button>
-    <button id=cell53>Cell 5,3</button>
 
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
@@ -76,15 +72,19 @@
         return [parseInt(m[1]), parseInt(m[2])]
       }
 
-      function highlight(cls) {  //whenever there is a class called, do this function
-          $(cls).css('background-color','red');
+      function highlight(cls, color) {  //whenever there is a class called, do this function
+          $(cls).css('background-color',color);
           setTimeout(function () {
             $(cls).css('background-color','')
           }, 6000);     //change color for 6 seconds to show the hints
       }
 
       for (let hint of hints) {
-        highlight(hint);
+        highlight(hint, 'aqua');
+      }
+
+      for (let check of checks) {
+        highlight(check, 'red');
       }
 
       function tap() {

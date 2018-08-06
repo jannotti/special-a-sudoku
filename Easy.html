@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku</title>
+    <link rel="stylesheet" type="text/css" href="jj.css">
+  </head>
+  <body>
+    <h1>Easy Sudoku</h1>
+
+    <div class="timer">0:00</div>
+
+    <a href="tammy.html">
+        <button>Back</button>
+    </a>
+
+    <a href="print string.html">
+        <button>print string</button>
+    </a>
+
+    <a href="tc.py">
+        <button>check solution</button>
+    </a>
+
+    <div class="board" tabindex="0">
+      <div class="sq known b0 r0 c0"></div>
+      <div class="sq entry b0 r0 c1"></div>
+      <div class="sq known b0 r0 c2"></div>
+      <div class="sq known b1 r0 c3"></div>
+      <div class="sq entry b1 r0 c4">4</div>
+      <div class="sq known b1 r0 c5">1</div>
+      <div class="sq entry b2 r0 c6"></div>
+      <div class="sq entry b2 r0 c7"></div>
+      <div class="sq known b2 r0 c8">9</div>
+
+      <div class="sq entry b0 r1 c0"></div>
+      <div class="sq known b0 r1 c1">1</div>
+      <div class="sq known b0 r1 c2">7</div>
+      <div class="sq entry b1 r1 c3">8</div>
+      <div class="sq known b1 r1 c4"></div>
+      <div class="sq known b1 r1 c5"></div>
+      <div class="sq entry b2 r1 c6"></div>
+      <div class="sq known b2 r1 c7"></div>
+      <div class="sq known b2 r1 c8">2</div>
+
+      <div class="sq entry b0 r2 c0">4</div>
+      <div class="sq entry b0 r2 c1"></div>
+      <div class="sq known b0 r2 c2"></div>
+      <div class="sq entry b1 r2 c3"></div>
+      <div class="sq entry b1 r2 c4">7</div>
+      <div class="sq known b1 r2 c5">9</div>
+      <div class="sq entry b2 r2 c6"></div>
+      <div class="sq entry b2 r2 c7"></div>
+      <div class="sq known b2 r2 c8">5</div>
+
+      <div class="sq known b3 r3 c0">1</div>
+      <div class="sq entry b3 r3 c1"></div>
+      <div class="sq known b3 r3 c2">8</div>
+      <div class="sq entry b4 r3 c3"></div>
+      <div class="sq entry b4 r3 c4"></div>
+      <div class="sq known b4 r3 c5"></div>
+      <div class="sq entry b5 r3 c6">2</div>
+      <div class="sq entry b5 r3 c7"></div>
+      <div class="sq known b5 r3 c8">3</div>
+
+      <div class="sq entry b3 r4 c0"></div>
+      <div class="sq known b3 r4 c1"></div>
+      <div class="sq known b3 r4 c2">3</div>
+      <div class="sq entry b4 r4 c3"></div>
+      <div class="sq entry b4 r4 c4">5</div>
+      <div class="sq known b4 r4 c5"></div>
+      <div class="sq entry b5 r4 c6">4</div>
+      <div class="sq known b5 r4 c7"></div>
+      <div class="sq known b5 r4 c8"></div>
+
+      <div class="sq known b3 r5 c0">2</div>
+      <div class="sq entry b3 r5 c1"></div>
+      <div class="sq known b3 r5 c2"></div>
+      <div class="sq entry b4 r5 c3">5</div>
+      <div class="sq entry b4 r5 c4">6</div>
+      <div class="sq known b4 r5 c5"></div>
+      <div class="sq entry b5 r5 c6"></div>
+      <div class="sq entry b5 r5 c7"></div>
+      <div class="sq known b5 r5 c8">4</div>
+
+      <div class="sq entry b6 r6 c0">5</div>
+      <div class="sq entry b6 r6 c1"></div>
+      <div class="sq known b6 r6 c2"></div>
+      <div class="sq entry b7 r6 c3">5</div>
+      <div class="sq entry b7 r6 c4">6</div>
+      <div class="sq known b7 r6 c5"></div>
+      <div class="sq entry b8 r6 c6"></div>
+      <div class="sq entry b8 r6 c7"></div>
+      <div class="sq known b8 r6 c8">4</div>
+
+      <div class="sq entry b6 r7 c0">5</div>
+      <div class="sq known b6 r7 c1"></div>
+      <div class="sq known b6 r7 c2"></div>
+      <div class="sq entry b7 r7 c3"></div>
+      <div class="sq known b7 r7 c4"></div>
+      <div class="sq known b7 r7 c5">2</div>
+      <div class="sq entry b8 r7 c6">3</div>
+      <div class="sq known b8 r7 c7">6</div>
+      <div class="sq known b8 r7 c8"></div>
+
+      <div class="sq known b6 r8 c0">3</div>
+      <div class="sq entry b6 r8 c1"></div>
+      <div class="sq known b6 r8 c2"></div>
+      <div class="sq known b7 r8 c3">7</div>
+      <div class="sq entry b7 r8 c4">8</div>
+      <div class="sq known b7 r8 c5"></div>
+      <div class="sq entry b8 r8 c6"></div>
+      <div class="sq entry b8 r8 c7"></div>
+      <div class="sq known b8 r8 c8"></div>
+    </div>
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+      var seconds = 0;
+      setInterval(function()  {
+        var min = Math.round(seconds / 60);
+        var sec = seconds % 60;
+        if (sec < 10) {
+          sec = "0" + sec;
+        }
+        $(".timer").html(min+":"+sec);
+        seconds++;
+      }, 1000);
+
+      var current_sq = undefined;
+      $(".board .sq").mouseenter(function(ev)  {
+        current_sq = ev.target;
+      });
+      $(".board").focus();
+      $(".board").keydown(function(ev) {
+        console.log(ev);
+        if (ev.key == " " || (ev.key >= "0" && ev.key <= "9")) {
+          if ($(current_sq).hasClass("entry"))
+            $(current_sq).html(ev.key);
+        }
+      });
+
+    </script>
+  </body>
+  </html>
