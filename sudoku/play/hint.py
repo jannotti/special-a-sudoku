@@ -325,8 +325,65 @@ def hidden_singles_row(possibilities_dic, enter_number):
             for col in range(9):
                 if int(enter_number) in possibilities_dic[(r, col)]:
                    coordinates.append((r, col))
-    coordinates   = [l for l in coordinates if len(l) > 0]           
+        
+    return coordinates
+
+def possibilities_board_transpose(possibilities_dic):
+    p_board = possibilities_board(possibilities_dic)
+    transposed = [None]*len(p_board[0])
+    for i in range(len(transposed)):
+        transposed[i] = [None]*len(transposed)
+    for t in range(len(p_board)):
+        for tt in range(len(p_board[t])):
+            transposed[t][tt] = p_board[tt][t]
+    return transposed
+
+def hidden_singles_col(possibilities_dic, enter_number):
+    possibilities_col_split = possibilities_board_transpose(possibilities_dic)
+    frequency_col_lst = []
+    for col in range(9):
+        col_holds_lst = possibilities_col_split[col]
+        col_lst_combined = []
+        for i in range(9):
+            col_elt = col_holds_lst[i]
+            col_lst_combined.extend(col_elt)
+        frequency_col_dict = get_frequency_dict(col_lst_combined)
+        frequency_col_lst.append(frequency_col_dict.get(enter_number, 0))
+    coordinates = []
+    for c in range(9):
+        if frequency_col_lst[c] == 1:
+            for row in range(9):
+                if int(enter_number) in possibilities_dic[(row, c)]:
+                    coordinates.append((row, c))
     return coordinates
 
 
-    
+def possibilities_board_box(possibilities_dic):
+    p_board_box = []
+    for n in range(9):
+        box_possibilities = []
+        for (r, c) in box_position(n):
+            box_possibilities.append(possibilities_dic[(r, c)])
+        p_board_box.append(box_possibilities)
+    return p_board_box 
+
+def hidden_singles_box(possibilities_dic, enter_number):
+    possibilities_box_split = possibilities_board_box(possibilities_dic)
+    frequency_box_lst = []
+    for box in range(9):
+        box_holds_lst = possibilities_box_split[box]
+        box_lst_combined = []
+        for i in range(9):
+            box_elt = box_holds_lst[i]
+            box_lst_combined.extend(box_elt)
+        frequency_box_dict = get_frequency_dict(box_lst_combined)
+        frequency_box_lst.append(frequency_box_dict.get(enter_number, 0))
+    coordinates = []
+    for b in range(9):
+        if frequency_box_lst[b] == 1:
+            box_possible_coordinates = box_position(b)
+            for (r, c) in box_possible_coordinates:
+                if int(enter_number) in possibilities_dic[(r, c)]:
+                    coordinates.append((r, c))
+    return coordinates 
+

@@ -174,6 +174,25 @@ def advise(original, submitted):
     if count(submitted, digit) == 8:
       advice.append("Add the last "+ str(digit));
 
+  possibilities = hint.possibilities_dict(submitted)
+  for n in range(1, 10):
+    coords = hint.hidden_singles_row(possibilities, n)
+    for coord in coords:
+        advice.append("Check Cell" + str(coord) + " for " + str(n))
+        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
+
+  for n in range(1, 10):
+    coords = hint.hidden_singles_col(possibilities, n)
+    for coord in coords:
+        advice.append("Check Cell" + str(coord) + " for " + str(n))
+        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
+
+  for n in range(1, 10):
+    coords = hint.hidden_singles_box(possibilities, n)
+    for coord in coords:
+        advice.append("Check Cell" + str(coord) + " for " + str(n))
+        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
+
   advice.append(str(last.which_number_is_the_last_one(submitted)))
 
   for n in range(1, 10):
