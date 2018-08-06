@@ -79,6 +79,7 @@
       }
 
       $(".littleboard").click(tap)
+      
 
       var current_sq = undefined;
       var tapped_sq = undefined;
@@ -92,6 +93,9 @@
       });
       $(".board .sq.entry").click((ev) => {
         tapped_sq = ev.target;
+        if (ev.target != "_"){
+          $(tapped_sq).html("_")
+        }
       });
       $(".board").focus();
       $(".board").keydown((ev) => {
