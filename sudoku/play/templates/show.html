@@ -137,7 +137,7 @@
       });
 
       function contents() {
-        return $(".board").text().replace(/[ \n]/g,"");
+        return $(".board .sq").text().replace(/[ \n]/g,"");
       }
       function update_solution() {
         $(".checker input[name='solution']").val(contents());

@@ -1,39 +1,11 @@
+import math
 import re
 
-from . import last
-from . import hint
+import last
+import hint
 
-db = ["""
-#3#|##1|#98
-#9#|###|76#
-##5|#7#|43#
----+---+---
-###|7##|##9
-8##|6#9|##7
-7##|##2|###
----+---+---
-#68|#4#|9##
-#42|###|#1#
-97#|1##|#5#
-""","""
-78#|#9#|###
-#94|3##|###
-#1#|#4#|##9
----+---+---
-3#1|##4|85#
-###|5#8|###
-#58|7##|2#4
----+---+---
-9##|#7#|#1#
-###|##9|54#
-###|#1#|#32
-"""]
-
-# db[0] answer is
-# 783192465294356781516847329371924856429568173658731294945273618132689547867415932
-
-def empty():
-  return [[None] * 9] * 9
+def empty(size=9):
+  return [[None] * size] * size
 
 def digits(s):
   d = []
@@ -44,13 +16,13 @@ def digits(s):
       d.append(None)
   return d
 
-def from_line(s):
+def from_line(s, size=9):
   b = []
-  for row in range(9):
-    b.append(digits(s[row*9:(row+1)*9]))
+  for row in range(size):
+    b.append(digits(s[row*size:(row+1)*size]))
   return b
 
-def from_grid(s):
+def from_grid(s, size=9):
   board = []
   for line in s.split("\n"):
     if re.search("[0-9#_]", line):
@@ -60,21 +32,16 @@ def from_grid(s):
           digits.append(int(char))
         elif char in "#_":
           digits.append(None)
-      if len(digits) != 9:
+      if len(digits) != size:
         warn("Bad line:", line)
       board.append(digits)
 
-  if len(board) > 9:
-    warn(len(board), ": too many lines")
+  if len(board) != size:
+    warn(len(board), " lines")
 
-  if len(board) < 9:
-    board += [[None]*9]*(9-len(lines))
   return board
 
-def get(board_id):
-  return db[board_id]
-
-def match_line(pattern, lst):
+def match_list(pattern, lst):
   if len(pattern) != len(lst):
     return False
 
@@ -84,13 +51,13 @@ def match_line(pattern, lst):
   return True
 
 def matches(board, submission):
-  for r in range(9):
-    if not match_line(board[r], submission[r]):
+  for r, row in enumerate(board):
+    if not match_list(row, submission[r]):
       return False
   return True
 
 def row(board, r):
-  return board[r]
+  return board[r][:]
 
 def col(board, c):
   col = []
@@ -119,9 +86,8 @@ def constrained(lst):
 
 def contains_repeat(l):
   for i in range(len(l)):
-    for j in range(len(l)):
-      if i != j and l[i] != None and l[i] == l[j]:
-        return True
+    if l[i] != None and l[i] in l[i+1:]:
+      return True
   return False
 
 def count(brd, digit):
@@ -129,7 +95,6 @@ def count(brd, digit):
   for row in brd:
     cnt += row.count(digit)
   return cnt
-
 
 def advise(original, submitted):
   advice = []
@@ -166,7 +131,7 @@ def advise(original, submitted):
         continue
       all = row(submitted, x) + col(submitted, y) + \
         box(submitted, box_of(x,y))
-      if constrained(set(all)):
+      if constrained(all):
         advice.append("Check Cell "+str((x,y)))
         hints.append(".r"+str(x)+".c"+str(y))
 
@@ -213,3 +178,193 @@ def to_html(board, submitted=empty()):
       squares.append({'classes' : 'sq {} r{} c{} b{}'.format(entry, r, c, box),
                       'content' : content })
   return squares
+
+class Board(object):
+  def __init__(self, s=None, digits=range(1,10)):
+    self.digits = digits
+    self.size = len(digits)
+    self.box_len = int(math.sqrt(self.size))
+
+    if s is None:
+      self.rows = empty()
+    elif len(s) == self.size**2:
+      self.rows = from_line(s, self.size)
+    else:
+      self.rows = from_grid(s)
+
+  def __str__(self):
+    return "\n".join([str(r).replace("None","_").replace(", ","")
+                      for r in self.rows]);
+
+  def get(self, r, c):
+    return self.rows[r][c]
+  def set(self, r, c, d):
+    assert d == None or (type(d) == int and d > 0 and d < 10)
+    self.rows[r][c]
+
+
+  def all(self):
+    return [digit for row in self.rows for digit in row]
+  def row(self, r):
+    return self.rows[r][:]
+  def col(self, c):
+    return [row[c] for row in self.rows]
+  def box(self, b):
+    box = []
+    row = self.box_len*(b//self.box_len)
+    for row in self.rows[row:row+self.box_len]:
+      col = self.box_len*(b%self.box_len)
+      box.extend(row[col:col+self.box_len])
+    return box
+  def box_of(self, r, c):
+    return self.box_len*(r // self.box_len) + c // self.box_len
+
+  # Class function, no self
+  def of(board_id):
+    return Board(Board.db[board_id])
+
+
+  def allows(self, submission):
+    return match_list(self.all(), submission.all())
+
+  def count(self, digit):
+    return self.all().count(digit)
+
+  def constrained(self, lst):
+    digits = set(lst)
+    # We return False when there's no None so that we can ask if a row
+    # is constrained when full and be told No. That is more convenient
+    # for reporting interesting, "constrained" locations.
+    if None not in digits:
+      return False
+    return len(digits) == self.size # Includes None
+
+  def possibility_table(self):
+    possibilities = []
+    for r, row in enumerate(self.rows):
+      prow = []
+      for c, digit in enumerate(row):
+        if digit:
+          prow.append(set())
+        else:
+          col = self.col(c)
+          box = self.box(self.box_of(r,c))
+          prow.append(set(self.digits).difference(set(row+col+box)))
+      possibilities.append(prow)
+    return possibilities
+
+  def hidden_singles_row(self):
+    ptable = self.possibility_table()
+    hints = []
+    for r in range(self.size):
+      prow = ptable[r]
+      all_possible = [p for possibles in prow for p in possibles]
+      frequency = hint.get_frequency_dict(all_possible)
+      for d in self.digits:
+        count = frequency.get(d, 0)
+        if count == 1:
+          for c in range(self.size):
+            if d in prow[c]:
+              hints.append((r, c, d))
+    return hints
+
+  
+  def advise(self, submitted):
+    advice = []
+    hints = [];
+    checks = []
+    if not self.allows(submitted):
+      advice.append("CHEATER!");
+
+    for i in range(self.size):
+      if contains_repeat(submitted.row(i)):
+        advice.append("Bad Row "+str(i))
+        checks.append(".r"+str(i))
+      if contains_repeat(submitted.col(i)):
+        advice.append("Bad Column "+str(i))
+        checks.append(".c"+str(i))
+      if contains_repeat(submitted.box(i)):
+        advice.append("Bad Box "+str(i))
+        checks.append(".b"+str(i))
+
+    for i in range(self.size):
+      if self.constrained(submitted.row(i)):
+        advice.append("Check Row "+str(i))
+        hints.append(".r"+str(i))
+      if self.constrained(submitted.col(i)):
+        advice.append("Check Column "+str(i))
+        hints.append(".c"+str(i))
+      if self.constrained(submitted.box(i)):
+        advice.append("Check Box "+str(i))
+        hints.append(".b"+str(i))
+
+    for r in range(self.size):
+      for c in range(self.size):
+        if submitted.get(r,c) != None:
+          continue
+        all = submitted.row(r) + submitted.col(c) + \
+          submitted.box(submitted.box_of(r,c))
+        if self.constrained(all):
+          advice.append("Check Cell "+str((r,c)))
+          hints.append(".r"+str(r)+".c"+str(c))
+
+    for digit in self.digits:
+      if submitted.count(digit) == self.size-1:
+        advice.append("Add the last "+ str(digit));
+
+    if self.size == 9:
+      advice.append(str(last.which_number_is_the_last_one(submitted.rows)))
+
+      adv = self.hidden_singles_row()
+      advice.extend([str(a) for a in adv])
+    return (advice, hints, checks)
+
+  def html(self, submitted=empty()):
+    squares = []
+    for r, row in enumerate(self.rows):
+      for c, digit in enumerate(row):
+        entry = "known" if digit else "entry"
+        content = digit or submitted.get(r,c) or '_'
+        squares.append({'classes' : 'sq {} r{} c{} b{}'.
+                        format(entry, r, c, self.box_of(r,c)),
+                        'content' : content })
+    return squares
+
+
+  db = ["""
+  #3#|##1|#98
+  #9#|###|76#
+  ##5|#7#|43#
+  ---+---+---
+  ###|7##|##9
+  8##|6#9|##7
+  7##|##2|###
+  ---+---+---
+  #68|#4#|9##
+  #42|###|#1#
+  97#|1##|#5#
+  ""","""
+  78#|#9#|###
+  #94|3##|###
+  #1#|#4#|##9
+  ---+---+---
+  3#1|##4|85#
+  ###|5#8|###
+  #58|7##|2#4
+  ---+---+---
+  9##|#7#|#1#
+  ###|##9|54#
+  ###|#1#|#32
+  """]
+
+  # db[0] answer is
+  # 783192465294356781516847329371924856429568173658731294945273618132689547867415932
+
+if __name__ == "__main__":
+  brd = Board("7831924652943567815168473293719248564295681736587312949452736181326895478674159_2")
+  print(brd)
+  print(brd.col(2))
+  assert brd.col(2)[0] == 3
+  print(brd.advise(brd))
+#  print(board.advise(Board("12343___4321____", range(1,5))))
+#  print(board.possibility_table())
