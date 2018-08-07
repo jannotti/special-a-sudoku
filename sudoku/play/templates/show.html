@@ -85,6 +85,18 @@
       }
 
       $("#grid div").click(tap)
+      $(document).ready(function(){
+        $(".board").click(function(){
+          $("#grid div").show();
+        });
+      });
+      $(document).ready(function(){
+        $("#grid div").click(function(){
+          $("#grid div").hide();
+        });
+      });
+
+
 
       var current_sq = undefined;
       var tapped_sq = undefined;
