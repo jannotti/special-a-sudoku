@@ -1,8 +1,9 @@
 import math
 import re
+import sys
 
-import last
-import hint
+from . import last
+from . import hint
 
 def empty(size=9):
   return [[None] * size] * size
@@ -135,10 +136,6 @@ def advise(original, submitted):
         advice.append("Check Cell "+str((x,y)))
         hints.append(".r"+str(x)+".c"+str(y))
 
-  for digit in range(1,10):
-    if count(submitted, digit) == 8:
-      advice.append("Add the last "+ str(digit));
-
   possibilities = hint.possibilities_dict(submitted)
   for n in range(1, 10):
     coords = hint.hidden_singles_row(possibilities, n)
@@ -158,12 +155,11 @@ def advise(original, submitted):
         advice.append("Check Cell" + str(coord) + " for " + str(n))
         hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
 
-  advice.append(str(last.which_number_is_the_last_one(submitted)))
+  for digit in range(1,10):
+    if count(submitted, digit) == 8:
+      advice.append("Add the last "+ str(digit));
 
-  for n in range(1, 10):
-    a = hint.hidden_singles_row(hint.possibilities_dict(submitted), n)
-    if len(a) > 0:
-        advice.append(str([a, n]))
+  advice.append(str(last.which_number_is_the_last_one(submitted)))
 
   return (advice, hints, checks)
 
@@ -207,8 +203,12 @@ class Board(object):
     return [digit for row in self.rows for digit in row]
   def row(self, r):
     return self.rows[r][:]
+  def row_coords(self,r):
+    return zip([r]*self.size, range(self.size))
   def col(self, c):
     return [row[c] for row in self.rows]
+  def col_coords(self,c):
+    return zip(range(self.size), [c]*self.size)
   def box(self, b):
     box = []
     row = self.box_len*(b//self.box_len)
@@ -216,6 +216,14 @@ class Board(object):
       col = self.box_len*(b%self.box_len)
       box.extend(row[col:col+self.box_len])
     return box
+  def box_coords(self, b):
+    coords = []
+    row = self.box_len*(b//self.box_len)
+    for r in range(row, row+self.box_len):
+      col = self.box_len*(b%self.box_len)
+      for c in range(col, col+self.box_len):
+        coords.append((r,c))
+    return coords
   def box_of(self, r, c):
     return self.box_len*(r // self.box_len) + c // self.box_len
 
@@ -239,6 +247,16 @@ class Board(object):
       return False
     return len(digits) == self.size # Includes None
 
+  def missing_digit(self, lst):
+    present = set(lst)
+    if None not in present:
+      return False
+    present.remove(None)
+    leftover = set(self.digits).difference(present)
+    if len(leftover) != 1:
+      return None
+    return list(leftover)[0]
+
   def possibility_table(self):
     possibilities = []
     for r, row in enumerate(self.rows):
@@ -259,16 +277,41 @@ class Board(object):
     for r in range(self.size):
       prow = ptable[r]
       all_possible = [p for possibles in prow for p in possibles]
-      frequency = hint.get_frequency_dict(all_possible)
       for d in self.digits:
-        count = frequency.get(d, 0)
-        if count == 1:
+        if all_possible.count(d) == 1:
           for c in range(self.size):
             if d in prow[c]:
               hints.append((r, c, d))
     return hints
 
-  
+  def hidden_singles_col(self):
+    ptable = self.possibility_table()
+    hints = []
+    for c in range(self.size):
+      pcol = [row[c] for row in ptable]
+      all_possible = [p for possibles in pcol for p in possibles]
+      for d in self.digits:
+        if all_possible.count(d) == 1:
+          for r in range(self.size):
+            if d in pcol[r]:
+              hints.append((r, c, d))
+    return hints
+
+  def hidden_singles_box(self):
+    ptable = self.possibility_table()
+    hints = []
+
+    for b in range(self.size):
+      all_possible = []
+      for r,c in self.box_coords(b):
+        all_possible.extend(ptable[r][c])
+      for d in self.digits:
+        if all_possible.count(d) == 1:
+          for r,c in self.box_coords(b):
+            if d in ptable[r][c]:
+              hints.append((r, c, d))
+    return hints
+
   def advise(self, submitted):
     advice = []
     hints = [];
@@ -315,8 +358,9 @@ class Board(object):
     if self.size == 9:
       advice.append(str(last.which_number_is_the_last_one(submitted.rows)))
 
-      adv = self.hidden_singles_row()
-      advice.extend([str(a) for a in adv])
+      for hint in self.hidden_singles_row():
+        advice.append("Check Cell" + str(hint[0:2]) + " for " + str(hint[2]))
+        hints.append(".r"+str(hint[0])+".c"+str(hint[1]))
     return (advice, hints, checks)
 
   def html(self, submitted=empty()):
@@ -330,7 +374,48 @@ class Board(object):
                         'content' : content })
     return squares
 
+  def find_constrained_cells(self):
+    cells = []
+    for r in range(self.size):
+      for c in range(self.size):
+        if self.get(r,c) != None:
+          continue
+        all = self.row(r) + self.col(c) + self.box(self.box_of(r,c))
+        digit = self.missing_digit(all)
+        if digit != None:
+          cells.append((r, c, digit))
+    return cells
 
+  def is_solved(self):
+    for row in self.rows:
+      if row.count(None) > 0:
+        return False
+    return True  
+    
+  def solve(self):
+    progressing = True
+    while not self.is_solved() and progressing:
+      progressing = False
+      for r, c, d in self.find_constrained_cells():
+        self.rows[r][c] = d
+        progressing = True
+      for r, c, d in self.hidden_singles_row():
+        self.rows[r][c] = d
+        progressing = True
+      for r, c, d in self.hidden_singles_col():
+        self.rows[r][c] = d
+        progressing = True
+      for r, c, d in self.hidden_singles_box():
+        self.rows[r][c] = d
+        progressing = True
+    return progressing
+
+  def load(file_name):
+    inFile = open(file_name, 'r')
+    for line in inFile:
+      Board.db.append(line.strip().lower())
+
+  
   db = ["""
   #3#|##1|#98
   #9#|###|76#
@@ -361,10 +446,23 @@ class Board(object):
   # 783192465294356781516847329371924856429568173658731294945273618132689547867415932
 
 if __name__ == "__main__":
-  brd = Board("7831924652943567815168473293719248564295681736587312949452736181326895478674159_2")
-  print(brd)
-  print(brd.col(2))
-  assert brd.col(2)[0] == 3
-  print(brd.advise(brd))
+  for file in sys.argv[1:]:
+    Board.load(file)
+  print("{} boards available.".format(len(Board.db)))
+
+  for b in range(len(Board.db)):
+    brd = Board(Board.db[b])
+    if not brd.solve():
+      print(b,"\n"+str(brd))
+      print(brd.find_constrained_cells())
+      print(brd.hidden_singles_box())
+    
+#  print(list(brd.col_coords(2)))
+#  print(list(brd.row_coords(2)))
+#  print(brd.box_coords(2))
+#  print(brd.solve())
+#  print(brd)
+#  print(brd.find_constrained_cells())
+  
 #  print(board.advise(Board("12343___4321____", range(1,5))))
 #  print(board.possibility_table())
