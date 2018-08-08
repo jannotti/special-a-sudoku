@@ -18,6 +18,7 @@
       </div>
       <input type="submit" value="Check">
     </form>
+    <button id="hint">AJAX Hint</button>
 
     {% if advice %}
     <ol>
@@ -159,7 +160,20 @@
       $("form").submit(() => {
         update_solution();
         return true;
-      })
+      });
+
+      $("#hint").click(() => {
+        show_url = window.location.href;
+        hint_url = show_url.replace("show", "hint")
+        update_solution()
+        form_data = $("form").serialize()
+        console.log(hint_url)
+        $.post(hint_url, form_data).done(function(value) {
+          for (let hint of value.hints) {
+            highlight(hint, 'aqua');
+          }
+        });
+      });
     </script>
   </body>
 </html>
