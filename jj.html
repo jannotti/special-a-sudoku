@@ -23,7 +23,11 @@
      <div class="timer">1:23</div>
      <div id="timer"></div>
    <input id="btnShow" type="button" value="show" />
-   <input id="btnHide" type="button" value="hide" /><br />
+   <input id="btnHide" type="button" value="hide" />
+
+
+   <br />
+   <button class="clear">restart</button>
    <script type="text/javascript" >
        $("#btnShow").bind("click", function(event) { $("#divMsg").show(); });
        $("#btnHide").bind("click", function(event) { $("#divMsg").hide(); });
@@ -157,6 +161,12 @@
             $(current_sq).html(ev.key);
         }
       });
+
+      $(document).ready(function(){
+$(".clear").click(function(){
+  $(".board").empty();
+  });
+});
 <<<<<<< HEAD
       $("#blue").click(()=>{$(".board").css("color","blue");});
 
