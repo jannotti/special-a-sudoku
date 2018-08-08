@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 
 from .board import Board
@@ -28,3 +28,19 @@ def show(request, board_id):
   }
   template = loader.get_template('show.html')
   return HttpResponse(template.render(context, request))
+
+def hint(request, board_id):
+  brd = Board.of(board_id)
+  submitted = Board()
+  advice = []
+  hints = []
+  checks = []
+  if request.POST:
+    submitted = Board(request.POST["solution"])
+    (advice, hints, checks) = brd.advise(submitted)
+  context = {
+    'advice' : advice,
+    'hints' : hints,
+    'checks' : checks,
+  }
+  return JsonResponse(context)
