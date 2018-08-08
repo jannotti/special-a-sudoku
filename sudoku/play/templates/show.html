@@ -85,8 +85,9 @@
       }
 
       $("#grid div").click(tap)
+      $("#grid div").hide()
       $(document).ready(function(){
-        $(".board").click(function(){
+        $(".board .sq.entry").click(function(){
           $("#grid div").show();
         });
       });
