@@ -6,7 +6,10 @@ from . import last
 from . import hint
 
 def empty(size=9):
-  return [[None] * size] * size
+  rows = []
+  for r in range(size):
+    rows.append([None] * size)
+  return rows
 
 def digits(s):
   d = []
@@ -188,6 +191,17 @@ class Board(object):
     else:
       self.rows = from_grid(s)
 
+  def copy(self):
+    clone = Board()
+    clone.digits = self.digits
+    clone.size = self.size
+    clone.box_len = self.box_len
+    for r, row in enumerate(self.rows):
+      for c, d in enumerate(row):
+        clone.rows[r][c] = d
+    return clone
+
+
   def __str__(self):
     return "\n".join([str(r).replace("None","_").replace(", ","")
                       for r in self.rows]);
@@ -267,7 +281,10 @@ class Board(object):
         else:
           col = self.col(c)
           box = self.box(self.box_of(r,c))
-          prow.append(set(self.digits).difference(set(row+col+box)))
+          available = set(self.digits).difference(set(row+col+box))
+          if len(available) == 0:
+            raise Exception("no solution")
+          prow.append(available)
       possibilities.append(prow)
     return possibilities
 
@@ -408,7 +425,24 @@ class Board(object):
       for r, c, d in self.hidden_singles_box():
         self.rows[r][c] = d
         progressing = True
-    return progressing
+    if progressing:
+      return self
+
+    possibilities = self.possibility_table()
+    for r, prow in enumerate(possibilities):
+      for c, choices in enumerate(prow):
+        if self.rows[r][c] != None:
+          continue
+        for choice in choices:
+          copy = self.copy()
+          copy.rows[r][c] = choice
+          try:
+            soln = copy.solve()
+            if soln != None:
+              return soln
+          except:
+            pass
+    return None
 
   def load(file_name):
     inFile = open(file_name, 'r')
@@ -450,12 +484,10 @@ if __name__ == "__main__":
     Board.load(file)
   print("{} boards available.".format(len(Board.db)))
 
-  for b in range(len(Board.db)):
-    brd = Board(Board.db[b])
-    if not brd.solve():
-      print(b,"\n"+str(brd))
-      print(brd.find_constrained_cells())
-      print(brd.hidden_singles_box())
+  for b in Board.db:
+    brd = Board(b)
+    print(brd)
+    print(brd.solve())
     
 #  print(list(brd.col_coords(2)))
 #  print(list(brd.row_coords(2)))
