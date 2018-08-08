@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.http import HttpResponse
+
+def play(request):
+  return HttpResponse("You probably want the <a href='{}'>play app</a>"
+                      .format("play"));
 
 urlpatterns = [
+  path('', play, name='index'),
   path('play/', include('play.urls')),
   path('admin/', admin.site.urls),
 ]
