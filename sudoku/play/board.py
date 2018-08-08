@@ -158,10 +158,12 @@ def advise(original, submitted):
         advice.append("Check Cell" + str(coord) + " for " + str(n))
         hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
 
-  for digit in range(1,10):
-    if count(submitted, digit) == 8:
-      advice.append("Add the last "+ str(digit));
+  #for digit in range(1,10):
+  #  if count(submitted, digit) == 8:
+  #    advice.append("Add the last "+ str(digit));
 
+  # Irene: Use the return value to add to 'advice' and 'hints'
+  # variables as needed.
   advice.append(str(last.which_number_is_the_last_one(submitted)))
 
   return (advice, hints, checks)
@@ -375,7 +377,7 @@ class Board(object):
     if self.size == 9:
       advice.append(str(last.which_number_is_the_last_one(submitted.rows)))
 
-      for hint in self.hidden_singles_row():
+      for hint in submitted.hidden_singles_row():
         advice.append("Check Cell" + str(hint[0:2]) + " for " + str(hint[2]))
         hints.append(".r"+str(hint[0])+".c"+str(hint[1]))
     return (advice, hints, checks)
