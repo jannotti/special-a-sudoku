@@ -46,5 +46,6 @@ def hint(request, board_id):
     'advice' : advice,
     'hints' : hints,
     'checks' : checks,
+    'rows' : brd.solve().rows
   }
   return JsonResponse(context)
