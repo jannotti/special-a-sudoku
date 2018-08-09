@@ -8,7 +8,7 @@
   <body>
     <h1>Sudoku</h1>
 
-    <div class="timer">1:23</div>
+    <div class="timer">0:00</div>
 
     <form class="checker" method="POST">
       {% csrf_token %}
@@ -76,11 +76,11 @@
       }
 
       for (let hint of hints) {
-        highlight(hint, '#e5f4f9');
+        highlight(hint, '#a7aae1');
       }
 
       for (let check of checks) {
-        highlight(check, '#5ba5c2');
+        highlight(check, '#fdfac4');
       }
 
       function tap() {
@@ -172,7 +172,7 @@
         console.log(hint_url)
         $.post(hint_url, form_data).done(function(value) {
           for (let hint of value.hints) {
-            highlight(hint, 'aqua');
+            highlight(hint, '#a7aae1');
           }
         });
       });

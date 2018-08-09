@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+h1 {
+  text-align: center;
+  font-size: 40px;
+}
+
 div.board {
   width: 362px;
   height: 362px;
@@ -9,12 +14,13 @@ div.board {
   font-size: 0;
   position: relative;
   outline: none;
+  margin: 0 auto;
 }
 
 div.board div.sq {
   width: 40px;
   height: 40px;
-  background-color: #ea7;
+  background-color: #CDECF0;
   display: inline-block;
   border: 1px solid black;
   font: 16px Helvetica;
@@ -47,7 +53,7 @@ div.board div.sq.b1,
 div.board div.sq.b3,
 div.board div.sq.b5,
 div.board div.sq.b7 {
-  background-color: #c85;
+  background-color: #a7dae1;
 }
 
 div.board div.sq.b1:hover,
@@ -66,15 +72,15 @@ div.board div.sq.b8:hover {
 }
 
 div.board div.sq.active {
- background-color: #d06;
+ background-color: #a7bae1;
 }
 
 div.sq.wrong {
-  color: red;
+  color: #fc910d;
 }
 
 div.sq.update {
-  color: blue;
+  color: #272890;
 }
 
 #grid {
@@ -86,7 +92,7 @@ div.sq.update {
 #grid div {
   width: 30px;
   height: 30px;
-  background-color: green;
+  background-color: #a7bae1;
   border: 1px solid black;
   font: 16px Helvetica;
   text-align: center;
