@@ -69,6 +69,14 @@ div.board div.sq.active {
  background-color: #d06;
 }
 
+div.sq.wrong {
+  color: red;
+}
+
+div.sq.update {
+  color: blue;
+}
+
 #grid {
   position: absolute;
   width:92px;

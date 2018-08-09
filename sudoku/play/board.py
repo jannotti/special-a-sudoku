@@ -409,8 +409,8 @@ class Board(object):
     for row in self.rows:
       if row.count(None) > 0:
         return False
-    return True  
-    
+    return True
+
   def solve(self):
     progressing = True
     while not self.is_solved() and progressing:
@@ -451,7 +451,7 @@ class Board(object):
     for line in inFile:
       Board.db.append(line.strip().lower())
 
-  
+
   db = ["""
   #3#|##1|#98
   #9#|###|76#
@@ -490,13 +490,13 @@ if __name__ == "__main__":
     brd = Board(b)
     print(brd)
     print(brd.solve())
-    
+
 #  print(list(brd.col_coords(2)))
 #  print(list(brd.row_coords(2)))
 #  print(brd.box_coords(2))
 #  print(brd.solve())
 #  print(brd)
 #  print(brd.find_constrained_cells())
-  
+
 #  print(board.advise(Board("12343___4321____", range(1,5))))
 #  print(board.possibility_table())
