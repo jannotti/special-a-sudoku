@@ -290,45 +290,25 @@ class Board(object):
       possibilities.append(prow)
     return possibilities
 
-  def hidden_singles_row(self):
-    ptable = self.possibility_table()
+  def unit_singles(self, ptable, coords):
     hints = []
-    for r in range(self.size):
-      prow = ptable[r]
-      all_possible = [p for possibles in prow for p in possibles]
-      for d in self.digits:
-        if all_possible.count(d) == 1:
-          for c in range(self.size):
-            if d in prow[c]:
-              hints.append((r, c, d))
+    all_possible = []
+    for r,c in coords:
+      all_possible.extend(ptable[r][c])
+    for d in self.digits:
+      if all_possible.count(d) == 1:
+        for r,c in coords:
+          if d in ptable[r][c]:
+            hints.append((r, c, d))
     return hints
 
-  def hidden_singles_col(self):
+  def hidden_singles(self):
     ptable = self.possibility_table()
     hints = []
-    for c in range(self.size):
-      pcol = [row[c] for row in ptable]
-      all_possible = [p for possibles in pcol for p in possibles]
-      for d in self.digits:
-        if all_possible.count(d) == 1:
-          for r in range(self.size):
-            if d in pcol[r]:
-              hints.append((r, c, d))
-    return hints
-
-  def hidden_singles_box(self):
-    ptable = self.possibility_table()
-    hints = []
-
-    for b in range(self.size):
-      all_possible = []
-      for r,c in self.box_coords(b):
-        all_possible.extend(ptable[r][c])
-      for d in self.digits:
-        if all_possible.count(d) == 1:
-          for r,c in self.box_coords(b):
-            if d in ptable[r][c]:
-              hints.append((r, c, d))
+    for i in range(self.size):
+      hints.extend(self.unit_singles(ptable, self.row_coords(i)))
+      hints.extend(self.unit_singles(ptable, self.col_coords(i)))
+      hints.extend(self.unit_singles(ptable, self.box_coords(i)))
     return hints
 
   def advise(self, submitted):
@@ -377,7 +357,7 @@ class Board(object):
     if self.size == 9:
       advice.append(str(last.which_number_is_the_last_one(submitted.rows)))
 
-      for hint in submitted.hidden_singles_row():
+      for hint in submitted.hidden_singles():
         advice.append("Check Cell" + str(hint[0:2]) + " for " + str(hint[2]))
         hints.append(".r"+str(hint[0])+".c"+str(hint[1]))
     return (advice, hints, checks)
@@ -409,8 +389,8 @@ class Board(object):
     for row in self.rows:
       if row.count(None) > 0:
         return False
-    return True  
-    
+    return True
+
   def solve(self):
     progressing = True
     while not self.is_solved() and progressing:
@@ -418,32 +398,26 @@ class Board(object):
       for r, c, d in self.find_constrained_cells():
         self.rows[r][c] = d
         progressing = True
-      for r, c, d in self.hidden_singles_row():
+      for r, c, d in self.hidden_singles():
         self.rows[r][c] = d
         progressing = True
-      for r, c, d in self.hidden_singles_col():
-        self.rows[r][c] = d
-        progressing = True
-      for r, c, d in self.hidden_singles_box():
-        self.rows[r][c] = d
-        progressing = True
+
     if progressing:
       return self
 
     possibilities = self.possibility_table()
     for r, prow in enumerate(possibilities):
       for c, choices in enumerate(prow):
-        if self.rows[r][c] != None:
-          continue
-        for choice in choices:
-          copy = self.copy()
-          copy.rows[r][c] = choice
-          try:
-            soln = copy.solve()
-            if soln != None:
-              return soln
-          except:
-            pass
+        if self.rows[r][c] == None:
+          for choice in choices:
+            copy = self.copy()
+            copy.rows[r][c] = choice
+            try:
+              soln = copy.solve()
+              if soln != None:
+                return soln
+            except:
+              pass
     return None
 
   def load(file_name):
@@ -451,7 +425,7 @@ class Board(object):
     for line in inFile:
       Board.db.append(line.strip().lower())
 
-  
+
   db = ["""
   #3#|##1|#98
   #9#|###|76#
@@ -490,13 +464,13 @@ if __name__ == "__main__":
     brd = Board(b)
     print(brd)
     print(brd.solve())
-    
+
 #  print(list(brd.col_coords(2)))
 #  print(list(brd.row_coords(2)))
 #  print(brd.box_coords(2))
 #  print(brd.solve())
 #  print(brd)
 #  print(brd.find_constrained_cells())
-  
+
 #  print(board.advise(Board("12343___4321____", range(1,5))))
 #  print(board.possibility_table())

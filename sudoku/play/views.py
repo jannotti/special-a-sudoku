@@ -7,6 +7,7 @@ from .board import Board
 if len(Board.db) < 10:
   Board.load("play/easy.txt")
   Board.load("play/hard.txt")
+  Board.load("play/hardest.txt")
 
 def index(request):
   context = {
@@ -21,14 +22,17 @@ def show(request, board_id):
   advice = []
   hints = []
   checks = []
+  time = 0
   if request.POST:
     submitted = Board(request.POST["solution"])
+    time = int(request.POST["time"])
     (advice, hints, checks) = brd.advise(submitted)
   context = {
     'advice' : advice,
     'hints' : hints,
     'checks' : checks,
-    'squares': brd.html(submitted)
+    'squares': brd.html(submitted),
+    'time' : time,
   }
   template = loader.get_template('show.html')
   return HttpResponse(template.render(context, request))
@@ -46,5 +50,6 @@ def hint(request, board_id):
     'advice' : advice,
     'hints' : hints,
     'checks' : checks,
+    'rows' : brd.solve().rows
   }
   return JsonResponse(context)
