@@ -22,14 +22,17 @@ def show(request, board_id):
   advice = []
   hints = []
   checks = []
+  time = 0
   if request.POST:
     submitted = Board(request.POST["solution"])
+    time = int(request.POST["time"])
     (advice, hints, checks) = brd.advise(submitted)
   context = {
     'advice' : advice,
     'hints' : hints,
     'checks' : checks,
-    'squares': brd.html(submitted)
+    'squares': brd.html(submitted),
+    'time' : time,
   }
   template = loader.get_template('show.html')
   return HttpResponse(template.render(context, request))

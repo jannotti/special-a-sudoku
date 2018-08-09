@@ -17,6 +17,7 @@
         <input id="sol" type="text" name="solution">
       </div>
       <input type="submit" value="Check">
+      <input type="hidden" name="time">
     </form>
     <button id="hint">AJAX Hint</button>
     <button id="solve">Solve</button>
@@ -35,6 +36,9 @@
       var checks = {{checks|safe}};
     </script>
 
+    <button  type="button" id="Pause">Pause</button>
+    <button  type="button" style="display:none" id="Restart">Restart</button>
+
     <div class="board" tabindex="0">
       {% for square in squares %}
       <div class="{{square.classes}}">
@@ -51,16 +55,20 @@
 
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
-      var seconds = 0;
-      setInterval(() => {
-        var min = Math.round(seconds / 60);
-        var sec = seconds % 60;
-        if (sec < 10) {
-          sec = "0" + sec;
-        }
-        $(".timer").html(min+":"+sec);
-        seconds++;
-      }, 1000);
+      var seconds = {{time}};
+      var notime = undefined;
+      function start_timer() {
+        notime = setInterval(() => {
+          var min = Math.round(seconds / 60);
+          var sec = seconds % 60;
+          if (sec < 10) {
+            sec = "0" + sec;
+          }
+          $(".timer").html(min+":"+sec);
+          seconds++;
+        }, 1000);
+      }
+      start_timer();
 
       function row_col(div) {
         let classes = div.className;
@@ -83,6 +91,19 @@
         highlight(check, '#fdfac4');
       }
 
+      $("#Pause").click((ev) => {
+        clearInterval(notime);
+        $(".board").hide();
+        $("#Pause").hide();
+        $("#Restart").show();
+        $("#Restart").click((ev) => {
+          start_timer();
+          $(".board").show();
+          $("#Restart").hide();
+          $("#Pause").show();
+        });
+      })
+
       function tap() {
         $(tapped_sq).html($(this).text());
       }
@@ -99,7 +120,6 @@
           $("#grid div").hide();
         });
       });
-
 
 
       var current_sq = undefined;
@@ -157,6 +177,7 @@
       }
       function update_solution() {
         $(".checker input[name='solution']").val(contents());
+        $(".checker input[name='time']").val(seconds);
       }
 
       $("form").submit(() => {
