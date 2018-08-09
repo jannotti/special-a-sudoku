@@ -7,6 +7,7 @@ from .board import Board
 if len(Board.db) < 10:
   Board.load("play/easy.txt")
   Board.load("play/hard.txt")
+  Board.load("play/hardest.txt")
 
 def index(request):
   context = {
