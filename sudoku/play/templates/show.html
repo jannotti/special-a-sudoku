@@ -16,6 +16,7 @@
       <div>
         <label for="sol">User solution:</label>
         <input id="sol" type="text" name="solution">
+        <input type="hidden" name="time">
       </div>
       <input type="submit" value="Check">
     </form>
@@ -50,7 +51,7 @@
 
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
-      var seconds = 0;
+      var seconds = {{time}};
       setInterval(() => {
         var min = Math.round(seconds / 60);
         var sec = seconds % 60;
@@ -156,6 +157,7 @@
       }
       function update_solution() {
         $(".checker input[name='solution']").val(contents());
+        $(".checker input[name='time']").val(seconds);
       }
 
       $("form").submit(() => {
