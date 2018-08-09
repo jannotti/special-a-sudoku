@@ -8,6 +8,7 @@
   <body>
     <h1>Sudoku</h1>
     <button class="clear">restart</button>
+    <button id="solve">solve</button>
     <div class="timer">1:23</div>
 
     <form class="checker" method="POST">
@@ -171,6 +172,37 @@
         $.post(hint_url, form_data).done(function(value) {
           for (let hint of value.hints) {
             highlight(hint, 'aqua');
+          }
+        });
+      });
+
+      $("#solve").click(() => {
+        show_url = window.location.href;
+        hint_url = show_url.replace("show", "hint")
+        update_solution()
+        form_data = $("form").serialize()
+        $.post(hint_url, form_data).done(function(value) {
+          let r = 0;
+          for (row of value.rows) {
+            let c = 0;
+            for (digit of row) {
+              cell = ".r" + r + ".c" + c;
+              user_digit = $(cell).text().trim();
+              if (user_digit != digit && user_digit != "_") {
+                $(cell).addClass("wrong");
+                console.log(cell, "wrong", digit, user_digit);
+              }
+              if (user_digit == digit) {
+                $(cell).html(digit);
+              }
+              if (user_digit == "_") {
+                $(cell).addClass("update")
+                console.log(cell, "update")
+              }
+              $(cell).html(digit);
+              c++;
+            }
+            r++;
           }
         });
       });
