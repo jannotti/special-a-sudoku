@@ -27,7 +27,7 @@ div.board div.sq {
   text-align: center;
   line-height: 40px;
   vertical-align: top;
-  /* float: left; */
+  float: left;
 }
 
 div.board div.known {
@@ -38,7 +38,7 @@ div.board div.entry {
 }
 
 div.board div.sq.c0 {
-  /* clear: both; */
+  clear: both;
 }
 
 div.board div.sq.c3, div.board div.sq.c6 {

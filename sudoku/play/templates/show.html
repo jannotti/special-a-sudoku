@@ -7,9 +7,13 @@
   </head>
   <body>
     <h1>Sudoku</h1>
-    <button class="clear">restart</button>
     <button id="solve">solve</button>
-    <div class="timer">1:23</div>
+    <button class="clear">restart</button>
+
+    <div class="timer"><span>0:00</span>
+      <input id="btnShow" type="button" value="Resume"/>
+      <input id="btnHide" type="button" value="Pause"/>
+    </div>
 
     <form class="checker" method="POST">
       {% csrf_token %}
@@ -22,17 +26,20 @@
     </form>
     <button id="hint">AJAX Hint</button>
 
-    {% if advice %}
-    <ol>
-      {% for a in advice %}
-        <li>{{a}}</li>
+    <ol id="advice">
+      {% for c in checks %}
+        <li>{{c.message}}</li>
+      {% endfor %}
+      {% for h in hints %}
+        <li>{{h.message}}</li>
       {% endfor %}
     </ol>
-    {% endif %}
 
     <script>
-      var hints = {{hints|safe}};
-      var checks = {{checks|safe}};
+      var context = {
+        hints: {{hints|safe}},
+        checks: {{checks|safe}},
+      };
     </script>
 
     <div class="board" tabindex="0">
@@ -52,15 +59,35 @@
     <script src="{% static "play/jquery-3.3.1.js" %}"></script>
     <script>
       var seconds = {{time}};
+      var paused = false;
       setInterval(() => {
         var min = Math.round(seconds / 60);
         var sec = seconds % 60;
         if (sec < 10) {
           sec = "0" + sec;
         }
-        $(".timer").html(min+":"+sec);
-        seconds++;
+        $(".timer span").html(min+":"+sec);
+        if (! paused) {
+          seconds++;
+        }
       }, 1000);
+
+
+      $("#btnShow").click(() => {
+        $(".board").show();
+        paused = false;
+        $("#btnShow").hide();
+        $("#btnHide").show();
+      });
+      $("#btnShow").hide();
+
+      $("#btnHide").click(() => {
+        $(".board").hide();
+        paused = true;
+        $("#btnHide").hide();
+        $("#btnShow").show();
+      });
+
 
       function row_col(div) {
         let classes = div.className;
@@ -68,36 +95,42 @@
         return [parseInt(m[1]), parseInt(m[2])]
       }
 
-      function highlight(cls, color) {  //whenever there is a class called, do this function
-          $(cls).css('background-color',color);
-          setTimeout(function () {
-            $(cls).css('background-color','')
-          }, 6000);     //change color for 6 seconds to show the hints
+      function highlight(cls, color) {
+        $(cls).css('background-color',color);
+        setTimeout(function () {
+          $(cls).css('background-color','')
+        }, 6000);
       }
 
-      for (let hint of hints) {
-        highlight(hint, 'aqua');
-      }
+      function show_context(context) {
+        const $advice = $("#advice");
+        $advice.empty();
 
-      for (let check of checks) {
-        highlight(check, 'red');
-      }
+        for (let check of context.checks) {
+          $advice.append("<li>"+check.message+"</li>");
+          for (let cls of check.interest) {
+            highlight(cls, 'red');
+          }
+        }
 
-      function tap() {
+        for (let hint of context.hints) {
+          $advice.append("<li>"+hint.message+"</li>");
+          for (let cls of hint.interest) {
+            highlight(cls, 'aqua');
+          }
+        }
+      }
+      show_context(context)
+
+      $("#grid div").click(function() {
         $(tapped_sq).html($(this).text());
-      }
-
-      $("#grid div").click(tap)
-      $("#grid div").hide()
-      $(document).ready(function(){
-        $(".board .sq.entry").click(function(){
-          $("#grid div").show();
-        });
       });
-      $(document).ready(function(){
-        $("#grid div").click(function(){
-          $("#grid div").hide();
-        });
+      $(".board .sq.entry").click(function() {
+        $("#grid").show();
+      });
+      $("#grid").hide()
+      $("#grid").click(function() {
+        $("#grid").hide();
       });
 
 
@@ -123,6 +156,7 @@
       });
       $(".board").focus();
       $(".board").keydown((ev) => {
+        $("#grid").hide();
         if (ev.key == " " || (ev.key >= "1" && ev.key <= "9")) {
           if ($(current_sq).hasClass("entry"))
             $(current_sq).html(ev.key == " " ? "_" : ev.key);
@@ -152,6 +186,10 @@
         }
       });
 
+      $(".clear").click(function(){
+        $(".board .sq.entry").text("_");
+      });
+
       function contents() {
         return $(".board .sq").text().replace(/[ \n]/g,"");
       }
@@ -171,11 +209,7 @@
         update_solution()
         form_data = $("form").serialize()
         console.log(hint_url)
-        $.post(hint_url, form_data).done(function(value) {
-          for (let hint of value.hints) {
-            highlight(hint, 'aqua');
-          }
-        });
+        $.post(hint_url, form_data).done(show_context);
       });
 
       $("#solve").click(() => {
@@ -192,14 +226,12 @@
               user_digit = $(cell).text().trim();
               if (user_digit != digit && user_digit != "_") {
                 $(cell).addClass("wrong");
-                console.log(cell, "wrong", digit, user_digit);
               }
               if (user_digit == digit) {
                 $(cell).html(digit);
               }
               if (user_digit == "_") {
                 $(cell).addClass("update")
-                console.log(cell, "update")
               }
               $(cell).html(digit);
               c++;

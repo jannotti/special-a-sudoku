@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.core.serializers.json import DjangoJSONEncoder
+#from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
+
 
 from .board import Board
 
@@ -18,17 +20,15 @@ def index(request):
 
 def show(request, board_id):
   brd = Board.of(board_id)
-  submitted = Board()
-  advice = []
+  submitted = brd.copy()
   hints = []
   checks = []
   time = 0
   if request.POST:
     submitted = Board(request.POST["solution"])
     time = int(request.POST["time"])
-    (advice, hints, checks) = brd.advise(submitted)
+    (hints, checks) = brd.advise(submitted)
   context = {
-    'advice' : advice,
     'hints' : hints,
     'checks' : checks,
     'squares': brd.html(submitted),
@@ -37,19 +37,24 @@ def show(request, board_id):
   template = loader.get_template('show.html')
   return HttpResponse(template.render(context, request))
 
+class JsonEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+      try:
+        return obj.json()
+      except AttributeError:
+        return super().default(obj)
+
 def hint(request, board_id):
   brd = Board.of(board_id)
-  submitted = Board()
-  advice = []
+  submitted = brd.copy()
   hints = []
   checks = []
   if request.POST:
     submitted = Board(request.POST["solution"])
-    (advice, hints, checks) = brd.advise(submitted)
+    (hints, checks) = brd.advise(submitted)
   context = {
-    'advice' : advice,
     'hints' : hints,
     'checks' : checks,
     'rows' : brd.solve().rows
   }
-  return JsonResponse(context)
+  return JsonResponse(context, JsonEncoder)

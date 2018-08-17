@@ -1,33 +1,14 @@
+import json
 import math
 import re
 import sys
 
-from . import last
-from . import hint
-
-def empty(size=9):
-  rows = []
-  for r in range(size):
-    rows.append([None] * size)
-  return rows
-
 def digits(s):
-  d = []
-  for ch in s:
-    if ch.isdigit():
-      d.append(int(ch))
-    else:
-      d.append(None)
-  return d
-
-def from_line(s, size=9):
-  b = []
-  for row in range(size):
-    b.append(digits(s[row*size:(row+1)*size]))
-  return b
+  return [int(ch) if ch.isdigit() else None for ch in s]
 
 def from_grid(s, size=9):
   board = []
+  size = 0
   for line in s.split("\n"):
     if re.search("[0-9#_]", line):
       digits = []
@@ -36,12 +17,13 @@ def from_grid(s, size=9):
           digits.append(int(char))
         elif char in "#_":
           digits.append(None)
-      if len(digits) != size:
-        warn("Bad line:", line)
+      if size != 0 and len(digits) != size:
+        print("Bad line:", line)
+      size = len(digits)
       board.append(digits)
 
   if len(board) != size:
-    warn(len(board), " lines")
+    print(len(board), " lines")
 
   return board
 
@@ -60,156 +42,51 @@ def matches(board, submission):
       return False
   return True
 
-def row(board, r):
-  return board[r][:]
-
-def col(board, c):
-  col = []
-  for row in board:
-    col.append(row[c])
-  return col
-
-def box(board, b):
-  box = []
-  for x in range(3*(b//3), 3*(1+b//3)):
-    for y in range(3*(b%3), 3*(1+b%3)):
-      box.append(board[x][y])
-  return box
-
-def box_of(row, col):
-  return 3*(row // 3) + col // 3
-
-def constrained(lst):
-  digits = set(lst)
-  # We return False when there's no None so that we can ask if a row
-  # is constrained when full and be told No. That is more convenient
-  # for reporting interesting, "constrained" locations.
-  if None not in digits:
-    return False
-  return len(digits) == 9       # Includes None
-
 def contains_repeat(l):
   for i in range(len(l)):
     if l[i] != None and l[i] in l[i+1:]:
       return True
   return False
 
-def count(brd, digit):
-  cnt = 0
-  for row in brd:
-    cnt += row.count(digit)
-  return cnt
-
-def advise(original, submitted):
-  advice = []
-  hints = []
-  checks = []
-  if not matches(original, submitted):
-    advice.append("CHEATER!");
-
-  for i in range(9):
-    if contains_repeat(row(submitted, i)):
-      advice.append("Bad Row "+str(i))
-      checks.append(".r"+str(i))
-    if contains_repeat(col(submitted, i)):
-      advice.append("Bad Column "+str(i))
-      checks.append(".c"+str(i))
-    if contains_repeat(box(submitted, i)):
-      advice.append("Bad Box "+str(i))
-      checks.append(".b"+str(i))
-
-  for i in range(9):
-    if constrained(row(submitted, i)):
-      advice.append("Check Row "+str(i))
-      hints.append(".r"+str(i))
-    if constrained(col(submitted, i)):
-      advice.append("Check Column "+str(i))
-      hints.append(".c"+str(i))
-    if constrained(box(submitted, i)):
-      advice.append("Check Box "+str(i))
-      hints.append(".b"+str(i))
-
-  for x in range(9):
-    for y in range(9):
-      if submitted[x][y] != None:
-        continue
-      all = row(submitted, x) + col(submitted, y) + \
-        box(submitted, box_of(x,y))
-      if constrained(all):
-        advice.append("Check Cell "+str((x,y)))
-        hints.append(".r"+str(x)+".c"+str(y))
-
-  possibilities = hint.possibilities_dict(submitted)
-  for n in range(1, 10):
-    coords = hint.hidden_singles_row(possibilities, n)
-    for coord in coords:
-        advice.append("Check Cell" + str(coord) + " for " + str(n))
-        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
-
-  for n in range(1, 10):
-    coords = hint.hidden_singles_col(possibilities, n)
-    for coord in coords:
-        advice.append("Check Cell" + str(coord) + " for " + str(n))
-        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
-
-  for n in range(1, 10):
-    coords = hint.hidden_singles_box(possibilities, n)
-    for coord in coords:
-        advice.append("Check Cell" + str(coord) + " for " + str(n))
-        hints.append(".r"+str(coord[0])+".c"+str(coord[1]))
-
-  #for digit in range(1,10):
-  #  if count(submitted, digit) == 8:
-  #    advice.append("Add the last "+ str(digit));
-
-  # Irene: Use the return value to add to 'advice' and 'hints'
-  # variables as needed.
-  if last.which_number_is_the_last_one(submitted)!=None:
-      advice.append(str(last.which_number_is_the_last_one(submitted)))
-
-  return (advice, hints, checks)
-
-
-def to_html(board, submitted=empty()):
-  squares = []
-  for r in range(len(board)):
-    for c in range(len(board[r])):
-      box = box_of(r,c)
-      entry = "known" if board[r][c] else "entry"
-      content = board[r][c] or submitted[r][c] or '_'
-      squares.append({'classes' : 'sq {} r{} c{} b{}'.format(entry, r, c, box),
-                      'content' : content })
-  return squares
+class Hint(object):
+  def __init__(self, message, interest=[], cell=None):
+    self.message = message
+    self.interest = interest    # a list of classes (.r3, .b2, etc)
+    if type(interest) != list:  # allow one class name
+      self.interest = [self.interest]
+    self.cell = cell            # a tuple
+  def json(self):
+    return self.__dict__
+  def __repr__(self):
+    return json.dumps(self.__dict__)
 
 class Board(object):
-  def __init__(self, s=None, digits=range(1,10)):
-    self.digits = digits
-    self.size = len(digits)
-    self.box_len = int(math.sqrt(self.size))
-
-    if s is None:
-      self.rows = empty()
-    elif len(s) == self.size**2:
-      self.rows = from_line(s, self.size)
+  def __init__(self, s=None):
+    if type(s) == int:
+      size = s
+      self.rows = [[None]*s for r in range(s)]
+    elif len(s) in [16,81,256]:
+      size = int(math.sqrt(len(s)))
+      self.rows = [digits(s[row*size:(row+1)*size])for row in range(size)]
     else:
       self.rows = from_grid(s)
+      size = len(self.rows)
+    self.digits = range(1, size+1)
+    self.size = size
+    self.box_len = int(math.sqrt(size))
 
   def copy(self):
-    clone = Board()
-    clone.digits = self.digits
-    clone.size = self.size
-    clone.box_len = self.box_len
-    for r, row in enumerate(self.rows):
-      for c, d in enumerate(row):
-        clone.rows[r][c] = d
+    clone = Board(self.size)
+    clone.rows = [row[:] for row in self.rows]
     return clone
-
 
   def __str__(self):
     return "\n".join([str(r).replace("None","_").replace(", ","")
                       for r in self.rows]);
 
-  def get(self, r, c):
+  def get(self, r, c=None):
+    if c == None:               # If a single arg is given, treat as tuple
+      return self.rows[r[0]][r[1]]
     return self.rows[r][c]
   def set(self, r, c, d):
     assert d == None or (type(d) == int and d > 0 and d < 10)
@@ -256,7 +133,7 @@ class Board(object):
     return self.all().count(digit)
 
   def constrained(self, lst):
-    digits = set(lst)
+    digits = set([self.get(coord) for coord in lst])
     # We return False when there's no None so that we can ask if a row
     # is constrained when full and be told No. That is more convenient
     # for reporting interesting, "constrained" locations.
@@ -313,55 +190,58 @@ class Board(object):
     return hints
 
   def advise(self, submitted):
-    advice = []
     hints = [];
     checks = []
+
     if not self.allows(submitted):
-      advice.append("CHEATER!");
+      checks.append(Hint("CHEATER!", ".sq"));
 
     for i in range(self.size):
       if contains_repeat(submitted.row(i)):
-        advice.append("Bad Row "+str(i))
-        checks.append(".r"+str(i))
+        checks.append(Hint("Duplicate", ".r"+str(i)))
       if contains_repeat(submitted.col(i)):
-        advice.append("Bad Column "+str(i))
-        checks.append(".c"+str(i))
+        checks.append(Hint("Duplicate", ".c"+str(i)))
       if contains_repeat(submitted.box(i)):
-        advice.append("Bad Box "+str(i))
-        checks.append(".b"+str(i))
+        checks.append(Hint("Duplicate", ".b"+str(i)))
 
     for i in range(self.size):
-      if self.constrained(submitted.row(i)):
-        advice.append("Check Row "+str(i))
-        hints.append(".r"+str(i))
-      if self.constrained(submitted.col(i)):
-        advice.append("Check Column "+str(i))
-        hints.append(".c"+str(i))
-      if self.constrained(submitted.box(i)):
-        advice.append("Check Box "+str(i))
-        hints.append(".b"+str(i))
+      if submitted.constrained(submitted.row_coords(i)):
+        hints.append(Hint("Row nearly done", ".r"+str(i),
+                          submitted.constrained(submitted.row_coords(i))))
+      if submitted.constrained(submitted.col_coords(i)):
+        hints.append(Hint("Column nearly done", ".c"+str(i),
+                          submitted.constrained(submitted.col_coords(i))))
+      if submitted.constrained(submitted.box_coords(i)):
+        hints.append(Hint("Box nearly done", ".b"+str(i),
+                          submitted.constrained(submitted.box_coords(i))))
 
     for r in range(self.size):
       for c in range(self.size):
         if submitted.get(r,c) != None:
           continue
-        all = submitted.row(r) + submitted.col(c) + \
-          submitted.box(submitted.box_of(r,c))
-        if self.constrained(all):
-          advice.append("Check Cell "+str((r,c)))
-          hints.append(".r"+str(r)+".c"+str(c))
+        all = list(submitted.row_coords(r)) + list(submitted.col_coords(c)) + \
+          list(submitted.box_coords(submitted.box_of(r,c)))
+        if submitted.constrained(all):
+          hints.append(Hint("Check Cell "+str((r,c)),
+                            ".r"+str(r)+".c"+str(c), (r,c)))
 
     for digit in self.digits:
       if submitted.count(digit) == self.size-1:
-        advice.append("Add the last "+ str(digit)+" at "+str(last.which_number_is_the_last_one(submitted.rows)[digit]))
+        for r in range(self.size):
+          if submitted.row(r).count(digit) == 0:
+            break
+        for c in range(self.size):
+          if submitted.col(c).count(digit) == 0:
+            break
+        hints.append(Hint("Add the last "+ str(digit), ".d"+str(digit), (r,c)))
 
     if self.size == 9:
       for hint in submitted.hidden_singles():
-        advice.append("Check Cell" + str(hint[0:2]) + " for " + str(hint[2]))
-        hints.append(".r"+str(hint[0])+".c"+str(hint[1]))
-    return (advice, hints, checks)
+        hints.append(Hint("Hidden single in " + str(hint[0:2]),
+                          ".r"+str(hint[0])+".c"+str(hint[1]), hint[0:2]))
+    return (hints, checks)
 
-  def html(self, submitted=empty()):
+  def html(self, submitted):
     squares = []
     for r, row in enumerate(self.rows):
       for c, digit in enumerate(row):
@@ -449,6 +329,11 @@ class Board(object):
   9##|#7#|#1#
   ###|##9|54#
   ###|#1#|#32
+  ""","""
+  1234
+  341#
+  2143
+  4321
   """]
 
   # db[0] answer is
